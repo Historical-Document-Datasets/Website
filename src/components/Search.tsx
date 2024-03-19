@@ -62,8 +62,19 @@ const Search = () => {
 
     const itemsjs = ItemsJS(items, config);
 
+    const search = (query: string, options = {}) => {
+      if (query == null) {
+        return [];
+      }
+      if (query.trim().length === 0) {
+        return items;
+      } else {
+        return miniSearch.search(query, options);
+      }
+    };
+
     // Search with MiniSearch
-    const search_results = miniSearch.search(searchQuery, {
+    const search_results = search(searchQuery, {
       prefix: true,
       fuzzy: 0.2,
     });
@@ -99,7 +110,7 @@ const Search = () => {
           </li>
         ))
       ) : (
-        <p>Type something to search.</p>
+        <p>No results found</p>
       )}
     </>
   );
