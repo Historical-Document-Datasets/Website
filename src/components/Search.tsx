@@ -1,12 +1,13 @@
 import { Input } from "@/components/ui/input";
+import { Dataset } from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters, setFilters] = useState([]);
-  const [results, setResults] = useState({});
+  const [filters] = useState([]);
+  const [results, setResults] = useState<{ data?: { items: Dataset[] } }>({});
 
   useEffect(() => {
     const items = [
@@ -60,7 +61,7 @@ const Search = () => {
 
     miniSearch.addAll(items);
 
-    const itemsjs = ItemsJS(items, config);
+    const itemsjs = ItemsJS(items, config); //TODO: Fix Typescript error
 
     const search = (query: string, options = {}) => {
       if (query == null) {
@@ -81,14 +82,16 @@ const Search = () => {
 
     const filteredResults = itemsjs.search({
       per_page: 3,
-      ids: search_results.map((v) => v.id),
+      ids: search_results.map((v) => v.id), //TODO: Fix Typescript error
       filters: {},
     });
 
     setResults(filteredResults);
   }, [searchQuery, filters]);
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setSearchQuery(e.target.value);
   };
 
