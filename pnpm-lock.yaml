@@ -20,9 +20,15 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  itemsjs:
+    specifier: ^2.1.24
+    version: 2.1.24
   lucide-react:
     specifier: ^0.358.0
     version: 0.358.0(react@18.2.0)
+  minisearch:
+    specifier: ^6.3.0
+    version: 6.3.0
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2161,6 +2167,10 @@ packages:
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  /itemsjs@2.1.24:
+    resolution: {integrity: sha512-e9t06r0jiSzC6Rx/rlJTh32VtocOEpwx7K+GCjkLk+ITMWQk5hxtl6yQzuZeRdMSdTFd6yoSLyT8GcDRmVKujw==}
+    dev: false
+
   /jackspeak@2.3.6:
     resolution: {integrity: sha512-N3yCS/NegsOBokc8GAdM8UcmfsKiSS8cipheD/nivzr700H+nsMOxJjQnvwOcRYVuFkdH0wGUvW2WbXGmrZGbQ==}
     engines: {node: '>=14'}
@@ -2301,6 +2311,10 @@ packages:
   /minipass@7.0.4:
     resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  /minisearch@6.3.0:
+    resolution: {integrity: sha512-ihFnidEeU8iXzcVHy74dhkxh/dn8Dc08ERl0xwoMMGqp4+LvRSCgicb+zGqWthVokQKvCSxITlh3P08OzdTYCQ==}
+    dev: false
 
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}

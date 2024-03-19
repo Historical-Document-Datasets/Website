@@ -1,7 +1,13 @@
+import Navbar from "./components/Navbar";
+import Search from "./components/Search";
+
 export default function App() {
   return (
-    <h1 className="text-3xl font-bold text-center">
-      Historical Document Datasets
-    </h1>
+    <>
+      <Navbar />
+      <div className="container max-w-screen-2xl py-6">
+        <Search />
+      </div>
+    </>
   );
 }
