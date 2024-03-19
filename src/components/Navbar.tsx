@@ -5,19 +5,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SquarePen, Sun } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <header className="w-full border-b border-border/40 bg-background/95">
       <div className="container flex h-16 max-w-screen-2xl items-center">
         <div className="mr-4 hidden md:flex">
-          <a href="" className="mr-6">
+          <Link to={"/"} className="mr-6">
             Historical Document Datasets
-          </a>
+          </Link>
           <nav className="flex items-center gap-6 text-sm">
-            <a href="" className="hover:text-foreground/80 text-foreground/60">
+            <Link
+              to={"browse/"}
+              className="hover:text-foreground/80 text-foreground/60"
+            >
               Browse
-            </a>
+            </Link>
             <a
               href=""
               className="hover:text-foreground/80 text-foreground/60 flex gap-1 items-center"
