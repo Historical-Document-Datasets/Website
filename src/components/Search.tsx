@@ -3,6 +3,7 @@ import { Dataset } from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
 import { SetStateAction, useEffect, useState } from "react";
+import ResultCard from "./ResultCard";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,6 +33,26 @@ const Search = () => {
         document_type:
           "Printed pages from sale catalogues and exhibitions from the 19th and 20th centuries",
         task: "Style classification Word detection",
+      },
+      {
+        id: 3,
+        name: "Test",
+        languages: ["English", "Italian"],
+        image_format: ["SVG"],
+        color_mode: ["Color"],
+        document_type:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+        task: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      },
+      {
+        id: 4,
+        name: "Test2",
+        languages: ["English", "Italian"],
+        image_format: ["SVG"],
+        color_mode: ["Color"],
+        document_type:
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+        task: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       },
     ];
 
@@ -84,7 +105,6 @@ const Search = () => {
     });
 
     const filteredResults = itemsjs.search({
-      per_page: 3,
       ids: search_results.map((v) => v.id), //TODO: Fix Typescript error
       filters: {},
     });
@@ -116,15 +136,15 @@ const Search = () => {
         {results.data?.items.length} results found in {results.timings?.total}{" "}
         ms.
       </p>
-      {results.data?.items.length != 0 ? (
-        results.data?.items.map((result) => (
-          <p key={result.name}>
-            {result.name} - {result.document_type}
-          </p>
-        ))
-      ) : (
-        <p>No results found</p>
-      )}
+      <div className="grid grid-cols-3 gap-2 items-start ">
+        {results.data?.items.length != 0 ? (
+          results.data?.items.map((result) => (
+            <ResultCard dataset={result} key={result.id} />
+          ))
+        ) : (
+          <p>No results found</p>
+        )}
+      </div>
     </div>
   );
 };
