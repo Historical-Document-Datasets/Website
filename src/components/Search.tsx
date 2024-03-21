@@ -7,7 +7,10 @@ import { SetStateAction, useEffect, useState } from "react";
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters] = useState([]);
-  const [results, setResults] = useState<{ data?: { items: Dataset[] } }>({});
+  const [results, setResults] = useState<{
+    timings?: { total: number };
+    data?: { items: Dataset[] };
+  }>({});
 
   useEffect(() => {
     const items = [
@@ -15,7 +18,7 @@ const Search = () => {
         id: 1,
         name: "ICDAR 2021 HDC",
         languages: ["Latin"],
-        image_format: ["TIFF", "JPG"],
+        image_format: ["TIFF", "PNG"],
         color_mode: ["Color", "Grayscale"],
         document_type: "Handwritten and printed page images in Latin",
         task: "Font/script, date, and location classification",
@@ -48,7 +51,7 @@ const Search = () => {
           conjunction: false,
         },
         image_format: {
-          title: "image_format",
+          title: "Image format",
           size: 10,
         },
       },
@@ -96,26 +99,33 @@ const Search = () => {
   };
 
   return (
-    <>
-      <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          placeholder="Type anything to search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
+    <div className="py-6 gap-8">
+      <h1 className="text-3xl">Browse datasets</h1>
+      <div className="py-2">
+        <div className="grid grid-cols-7 gap-4">
+          <Input
+            type="text"
+            placeholder="Type anything to search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="h-10 col-span-6"
+          />
+        </div>
       </div>
-
+      <p className="text-foreground/60 text-sm pb-4">
+        {results.data?.items.length} results found in {results.timings?.total}{" "}
+        ms.
+      </p>
       {results.data?.items.length != 0 ? (
         results.data?.items.map((result) => (
-          <li key={result.name}>
+          <p key={result.name}>
             {result.name} - {result.document_type}
-          </li>
+          </p>
         ))
       ) : (
         <p>No results found</p>
       )}
-    </>
+    </div>
   );
 };
 
