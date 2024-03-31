@@ -1,8 +1,3 @@
-"use client";
-
-import * as React from "react";
-
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -17,108 +12,96 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { ChevronDown, ChevronUp } from "lucide-react";
+
 import { Checkbox } from "@/components/ui/checkbox";
-type Property = {
-  value: string;
-  label: string;
-};
+import { Aggregation, Bucket } from "@/utils/types";
+import { useState } from "react";
+import { Badge } from "./ui/badge";
 
-const languages: Property[] = [
-  {
-    value: "fra",
-    label: "French",
-  },
-  {
-    value: "eng",
-    label: "English",
-  },
-  {
-    value: "lat",
-    label: "Latin",
-  },
-  {
-    value: "ger",
-    label: "German",
-  },
-  {
-    value: "csharp",
-    label: "C#",
-  },
-];
+export function FilterBox({ aggregation }: { aggregation: Aggregation }) {
+  const [open, setOpen] = useState(false);
+  const [selected, setselected] = useState<Bucket[]>([]);
+  const buckets = aggregation.buckets;
 
-export function FilterBox() {
-  const [open, setOpen] = React.useState(false);
-  const [selected, setselected] = React.useState<Property[]>([]);
+  const removeItem = (bucket: Bucket) => {
+    setselected((prevSelected) =>
+      prevSelected.filter((prevBucket) => prevBucket !== bucket)
+    );
+  };
 
-  const handleSelect = (checked: string | boolean, value: string) => {
-    if (!checked) {
-      setselected((prevselected) =>
-        prevselected.filter(
-          (selectedLanguage) => selectedLanguage.value !== value
-        )
-      );
+  const handleSelect = (checked: string | boolean, bucket: Bucket) => {
+    if (checked) {
+      setselected((prevSelected) => [...prevSelected, bucket]);
     } else {
-      setselected((prevselected) =>
-        [
-          ...prevselected,
-          languages.find((lang) => lang.value === value) || {
-            value: "",
-            label: "",
-          },
-        ].filter((language): language is Property => language !== null)
-      );
+      removeItem(bucket);
     }
   };
 
   return (
-    <div className="flex items-center space-x-4">
-      <p className="text-sm text-muted-foreground">Languages</p>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-[150px] justify-start">
-            {selected.length > 0 ? (
-              <>
-                {selected.map((language, index) => (
-                  <span key={language.value}>
-                    {language.label}
-                    {index !== selected.length - 1 && ", "}
-                  </span>
-                ))}
-              </>
-            ) : (
-              <>+ Select languages</>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0 w-58" side="right" align="start">
-          <Command>
-            <CommandInput placeholder="Search languages..." />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                {languages.map((language) => (
-                  <CommandItem
-                    key={language.value}
-                    value={language.label}
-                    className="space-x-2"
-                  >
-                    <Checkbox
-                      id={language.value}
-                      checked={selected?.includes(language)}
-                      onCheckedChange={(checked) => {
-                        handleSelect(checked, language.value);
-                      }}
-                    />
-                    <label htmlFor={language.value} className="cursor-pointer">
-                      {language.label}
-                    </label>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+    <div>
+      <h3 className="font-lg font-medium pb-1">{aggregation.title}</h3>
+      <div className="pr-6">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
+              <div className="flex flex-wrap gap-1">
+                {selected.length > 0 ? (
+                  <>
+                    {selected.map((bucket) => (
+                      <Badge
+                        variant={"outline"}
+                        className="font-medium"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          removeItem(bucket);
+                        }}
+                        key={bucket.key}
+                      >
+                        <span className="pr-1">{bucket.key}</span> ×
+                      </Badge>
+                    ))}
+                  </>
+                ) : (
+                  <p className="pl-1">
+                    Select {aggregation.title.toLowerCase()}
+                  </p>
+                )}
+              </div>
+              {open ? (
+                <ChevronUp className="h-4" />
+              ) : (
+                <ChevronDown className="h-4" />
+              )}
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="p-0 w-58" side="right" align="start">
+            <Command>
+              <CommandInput placeholder="Search languages..." />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup>
+                  {buckets.map((bucket) => (
+                    <CommandItem key={bucket.key} value={bucket.key}>
+                      <Checkbox
+                        id={bucket.key}
+                        checked={selected?.includes(bucket)}
+                        onCheckedChange={(checked) => {
+                          handleSelect(checked, bucket);
+                        }}
+                        className="mr-2"
+                      />
+                      <label htmlFor={bucket.key} className="cursor-pointer">
+                        {bucket.key} ({bucket.doc_count})
+                      </label>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 }

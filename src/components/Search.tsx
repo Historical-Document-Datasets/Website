@@ -1,17 +1,19 @@
 import { Input } from "@/components/ui/input";
-import { Dataset } from "@/utils/types";
+import { SearchResult } from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
 import { SetStateAction, useEffect, useState } from "react";
 import ResultCard from "./ResultCard";
 
-const Search = () => {
+const Search = ({
+  results,
+  setResults,
+}: {
+  results: SearchResult;
+  setResults: (value: object) => void;
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters] = useState([]);
-  const [results, setResults] = useState<{
-    timings?: { total: number };
-    data?: { items: Dataset[] };
-  }>({});
 
   useEffect(() => {
     const items = [
@@ -110,7 +112,7 @@ const Search = () => {
     });
 
     setResults(filteredResults);
-  }, [searchQuery, filters]);
+  }, [searchQuery, filters, setResults]);
 
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };

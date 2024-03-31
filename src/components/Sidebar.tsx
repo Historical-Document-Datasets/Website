@@ -1,8 +1,10 @@
+import { Aggregation, SearchResult } from "@/utils/types";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
 import { useState } from "react";
+import { FilterBox } from "./Filterbox";
 import { Button } from "./ui/button";
 
-export default function Sidebar() {
+export default function Sidebar({ results }: { results: SearchResult }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -12,7 +14,7 @@ export default function Sidebar() {
     <div
       className={isCollapsed ? "w-13" : "w-1/5 border-r border-border/80 mr-8"}
     >
-      <div className="py-6 flex justify-between pr-6">
+      <div className="pt-6 flex justify-between pr-6 pb-2">
         <h2 className={isCollapsed ? "hidden" : "text-xl font-semibold"}>
           Filters
         </h2>
@@ -28,6 +30,13 @@ export default function Sidebar() {
             <ArrowLeftFromLine className="h-4 w-4" />
           )}
         </Button>
+      </div>
+      <div className={isCollapsed ? "hidden" : "flex flex-col gap-4"}>
+        {Object.values(results.data?.aggregations || {}).map(
+          (aggregation: Aggregation) => (
+            <FilterBox key={aggregation.name} aggregation={aggregation} />
+          )
+        )}
       </div>
     </div>
   );
