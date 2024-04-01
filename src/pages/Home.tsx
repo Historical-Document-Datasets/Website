@@ -11,7 +11,7 @@ export default function Home() {
       <p className="my-4">
         This will be the home page. This is still under construction.
       </p>
-      <p className="mb-2">In the meanwile, you can still</p>
+      <p className="mb-2">In the meanwhile, you can</p>
       <Link to={"browse/"}>
         <Button variant={"outline"}>
           <ExternalLink className="mr-2 h-4 w-4" />

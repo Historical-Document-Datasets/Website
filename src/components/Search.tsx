@@ -113,7 +113,6 @@ const Search = ({
 
     setResults(filteredResults);
   }, [searchQuery, filters, setResults]);
-
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
@@ -124,21 +123,19 @@ const Search = ({
     <div className="py-6 gap-8">
       <h1 className="text-3xl">Browse datasets</h1>
       <div className="py-2">
-        <div className="grid grid-cols-7 gap-4">
-          <Input
-            type="text"
-            placeholder="Type anything to search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="h-10 col-span-6"
-          />
-        </div>
+        <Input
+          type="text"
+          placeholder="Type anything to search..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="h-10"
+        />
       </div>
       <p className="text-foreground/60 text-sm pb-4">
-        {results.data?.items.length} results found in {results.timings?.total}{" "}
+        {results.data?.items.length} results found in {results.timings?.total}
         ms.
       </p>
-      <div className="grid grid-cols-3 gap-2 items-start ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
         {results.data?.items.length != 0 ? (
           results.data?.items.map((result) => (
             <ResultCard dataset={result} key={result.id} />

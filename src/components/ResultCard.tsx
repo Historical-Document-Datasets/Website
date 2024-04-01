@@ -36,7 +36,7 @@ export default function ResultCard({ dataset }: { dataset: Dataset }) {
         </div>
       </div>
       <Separator className="my-4" />
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <Button size={"sm"} variant={"outline"}>
           <PencilLine className="mr-2 h-4 w-4" /> Suggest an edit
         </Button>
