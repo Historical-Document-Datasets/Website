@@ -87,7 +87,8 @@ const Search = ({
 
     miniSearch.addAll(items);
 
-    const itemsjs = ItemsJS(items, config); //TODO: Fix Typescript error
+    // @ts-expect-error Invalid sortings
+    const itemsjs = ItemsJS(items, config);
 
     const search = (query: string, options = {}) => {
       if (query == null) {
@@ -107,7 +108,8 @@ const Search = ({
     });
 
     const filteredResults = itemsjs.search({
-      ids: search_results.map((v) => v.id), //TODO: Fix Typescript error
+      // @ts-expect-error field "ids" is not implemented in @types/itemsjs
+      ids: search_results.map((v) => v.id),
       filters: {},
     });
 
