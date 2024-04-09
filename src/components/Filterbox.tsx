@@ -53,7 +53,6 @@ export function FilterBox({
     } else {
       removeItem(bucket_key);
     }
-    console.log(selectedItems);
   };
 
   return (
