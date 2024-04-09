@@ -15,27 +15,45 @@ import {
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { Aggregation, Bucket } from "@/utils/types";
+import { Aggregation } from "@/utils/types";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
 
-export function FilterBox({ aggregation }: { aggregation: Aggregation }) {
+export function FilterBox({
+  aggregation,
+  filters,
+  setFilters,
+}: {
+  aggregation: Aggregation;
+  filters: Record<string, string[]>;
+  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+}) {
   const [open, setOpen] = useState(false);
-  const [selected, setselected] = useState<Bucket[]>([]);
   const buckets = aggregation.buckets;
+  const selectedItems = filters[aggregation.name] || [];
 
-  const removeItem = (bucket: Bucket) => {
-    setselected((prevSelected) =>
-      prevSelected.filter((prevBucket) => prevBucket !== bucket)
-    );
+  const removeItem = (bucket_key: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [aggregation.name]: (prevFilters[aggregation.name] || []).filter(
+        (value) => value !== bucket_key
+      ),
+    }));
   };
 
-  const handleSelect = (checked: string | boolean, bucket: Bucket) => {
+  const handleSelect = (checked: string | boolean, bucket_key: string) => {
     if (checked) {
-      setselected((prevSelected) => [...prevSelected, bucket]);
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        [aggregation.name]: [
+          ...(prevFilters[aggregation.name] || []),
+          bucket_key,
+        ],
+      }));
     } else {
-      removeItem(bucket);
+      removeItem(bucket_key);
     }
+    console.log(selectedItems);
   };
 
   return (
@@ -46,19 +64,19 @@ export function FilterBox({ aggregation }: { aggregation: Aggregation }) {
           <PopoverTrigger asChild>
             <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
               <div className="flex flex-wrap gap-1">
-                {selected.length > 0 ? (
+                {selectedItems.length > 0 ? (
                   <>
-                    {selected.map((bucket) => (
+                    {selectedItems.map((key) => (
                       <Badge
                         variant={"outline"}
                         className="font-medium"
                         onClick={(event) => {
                           event.stopPropagation();
-                          removeItem(bucket);
+                          removeItem(key);
                         }}
-                        key={bucket.key}
+                        key={key}
                       >
-                        <span className="pr-1">{bucket.key}</span> ×
+                        <span className="pr-1">{key}</span> ×
                       </Badge>
                     ))}
                   </>
@@ -85,10 +103,10 @@ export function FilterBox({ aggregation }: { aggregation: Aggregation }) {
                     <CommandItem key={bucket.key} value={bucket.key}>
                       <Checkbox
                         id={bucket.key}
-                        checked={selected?.includes(bucket)}
-                        onCheckedChange={(checked) => {
-                          handleSelect(checked, bucket);
-                        }}
+                        checked={selectedItems.includes(bucket.key)}
+                        onCheckedChange={(checked) =>
+                          handleSelect(checked, bucket.key)
+                        }
                         className="mr-2"
                       />
                       <label htmlFor={bucket.key} className="cursor-pointer">

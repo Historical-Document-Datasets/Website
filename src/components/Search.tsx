@@ -9,12 +9,13 @@ import data from "./output.json";
 const Search = ({
   results,
   setResults,
+  filters,
 }: {
   results: SearchResult;
   setResults: (value: object) => void;
+  filters: Record<string, string[]>;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters] = useState([]);
 
   useEffect(() => {
     const config = {
@@ -30,7 +31,7 @@ const Search = ({
         language: {
           title: "Languages",
           size: 100,
-          conjunction: false,
+          conjunction: true,
         },
         format: {
           title: "Image format",
@@ -69,7 +70,7 @@ const Search = ({
     const filteredResults = itemsjs.search({
       // @ts-expect-error field "ids" is not implemented in @types/itemsjs
       ids: search_results.map((v) => v.id),
-      filters: {},
+      filters: filters,
     });
 
     setResults(filteredResults);
