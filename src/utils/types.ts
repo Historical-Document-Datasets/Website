@@ -1,13 +1,18 @@
 import ItemsJS from "itemsjs";
 
 export interface Dataset {
-  id: number;
+  id: string;
   name: string;
-  languages: string[];
-  image_format: string[];
-  color_mode: string[];
-  document_type: string;
+  statistics: string;
+  class: string;
   task: string;
+  language: string[];
+  document_type: string;
+  mode: string[];
+  resolution: string;
+  format: string[];
+  reference: string;
+  description: string;
 }
 
 export interface Bucket {

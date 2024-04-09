@@ -4,6 +4,7 @@ import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
 import { SetStateAction, useEffect, useState } from "react";
 import ResultCard from "./ResultCard";
+import data from "./output.json";
 
 const Search = ({
   results,
@@ -16,48 +17,6 @@ const Search = ({
   const [filters] = useState([]);
 
   useEffect(() => {
-    const items = [
-      {
-        id: 1,
-        name: "ICDAR 2021 HDC",
-        languages: ["Latin"],
-        image_format: ["TIFF", "PNG"],
-        color_mode: ["Color", "Grayscale"],
-        document_type: "Handwritten and printed page images in Latin",
-        task: "Font/script, date, and location classification",
-      },
-      {
-        id: 2,
-        name: "BIR Database",
-        languages: ["French", "Latin", "Other"],
-        image_format: ["JPG"],
-        color_mode: ["Color"],
-        document_type:
-          "Printed pages from sale catalogues and exhibitions from the 19th and 20th centuries",
-        task: "Style classification Word detection",
-      },
-      {
-        id: 3,
-        name: "Test",
-        languages: ["English", "Italian"],
-        image_format: ["SVG"],
-        color_mode: ["Color"],
-        document_type:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        task: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      },
-      {
-        id: 4,
-        name: "Test2",
-        languages: ["English", "Italian"],
-        image_format: ["SVG"],
-        color_mode: ["Color"],
-        document_type:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-        task: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      },
-    ];
-
     const config = {
       native_search_enabled: false,
       custom_id_field: "id",
@@ -68,14 +27,14 @@ const Search = ({
         },
       },
       aggregations: {
-        languages: {
+        language: {
           title: "Languages",
-          size: 10,
+          size: 100,
           conjunction: false,
         },
-        image_format: {
+        format: {
           title: "Image format",
-          size: 10,
+          size: 100,
         },
       },
       searchableFields: ["name"],
@@ -85,17 +44,17 @@ const Search = ({
       fields: ["name"],
     });
 
-    miniSearch.addAll(items);
+    miniSearch.addAll(data);
 
     // @ts-expect-error Invalid sortings
-    const itemsjs = ItemsJS(items, config);
+    const itemsjs = ItemsJS(data, config);
 
     const search = (query: string, options = {}) => {
       if (query == null) {
         return [];
       }
       if (query.trim().length === 0) {
-        return items;
+        return data;
       } else {
         return miniSearch.search(query, options);
       }
@@ -134,7 +93,7 @@ const Search = ({
         />
       </div>
       <p className="text-foreground/60 text-sm pb-4">
-        {results.data?.items.length} results found in {results.timings?.total}
+        {results?.pagination?.total} results found in {results.timings?.total}
         ms.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
