@@ -7,9 +7,17 @@ import { Button } from "./ui/button";
 export default function Sidebar({
   mobile,
   results,
+  filters,
+  setFilters,
+  conjunction,
+  setConjunction,
 }: {
   mobile: boolean;
   results: SearchResult;
+  filters: Record<string, string[]>;
+  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+  conjunction: Record<string, boolean>;
+  setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleCollapse = () => {
@@ -50,7 +58,14 @@ export default function Sidebar({
       <div className={isCollapsed ? "hidden" : "flex flex-col gap-4"}>
         {Object.values(results.data?.aggregations || {}).map(
           (aggregation: Aggregation) => (
-            <FilterBox key={aggregation.name} aggregation={aggregation} />
+            <FilterBox
+              key={aggregation.name}
+              aggregation={aggregation}
+              filters={filters}
+              setFilters={setFilters}
+              conjunction={conjunction}
+              setConjunction={setConjunction}
+            />
           )
         )}
       </div>

@@ -9,12 +9,15 @@ import data from "./output.json";
 const Search = ({
   results,
   setResults,
+  filters,
+  conjunction,
 }: {
   results: SearchResult;
   setResults: (value: object) => void;
+  filters: Record<string, string[]>;
+  conjunction: Record<string, boolean>;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filters] = useState([]);
 
   useEffect(() => {
     const config = {
@@ -30,11 +33,17 @@ const Search = ({
         language: {
           title: "Languages",
           size: 100,
-          conjunction: false,
+          conjunction: conjunction?.language || false,
         },
         format: {
           title: "Image format",
           size: 100,
+          conjunction: conjunction?.format || false,
+        },
+        mode: {
+          title: "Color mode",
+          size: 100,
+          conjunction: conjunction?.mode || false,
         },
       },
       searchableFields: ["name"],
@@ -69,11 +78,11 @@ const Search = ({
     const filteredResults = itemsjs.search({
       // @ts-expect-error field "ids" is not implemented in @types/itemsjs
       ids: search_results.map((v) => v.id),
-      filters: {},
+      filters: filters,
     });
 
     setResults(filteredResults);
-  }, [searchQuery, filters, setResults]);
+  }, [searchQuery, filters, setResults, conjunction]);
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {

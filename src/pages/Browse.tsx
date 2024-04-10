@@ -8,10 +8,19 @@ import { useState } from "react";
 
 export default function Browse() {
   const [results, setResults] = useState<SearchResult>({});
+  const [filters, setFilters] = useState<Record<string, string[]>>({});
+  const [conjunction, setConjunction] = useState<Record<string, boolean>>({});
 
   return (
     <div className="flex">
-      <Sidebar mobile={false} results={results} />
+      <Sidebar
+        mobile={false}
+        results={results}
+        filters={filters}
+        setFilters={setFilters}
+        conjunction={conjunction}
+        setConjunction={setConjunction}
+      />
       <Sheet>
         <SheetTrigger asChild>
           <Button className="mr-4 mt-6 md:hidden" variant="outline" size="icon">
@@ -19,12 +28,24 @@ export default function Browse() {
           </Button>
         </SheetTrigger>
         <SheetContent side={"left"}>
-          <Sidebar mobile={true} results={results} />
+          <Sidebar
+            mobile={true}
+            results={results}
+            filters={filters}
+            setFilters={setFilters}
+            conjunction={conjunction}
+            setConjunction={setConjunction}
+          />
         </SheetContent>
       </Sheet>
 
       <div className="flex-1">
-        <Search results={results} setResults={setResults} />
+        <Search
+          results={results}
+          setResults={setResults}
+          filters={filters}
+          conjunction={conjunction}
+        />
       </div>
     </div>
   );
