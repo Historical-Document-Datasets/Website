@@ -12,21 +12,34 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Aggregation } from "@/utils/types";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function FilterBox({
   aggregation,
   filters,
   setFilters,
+  conjunction,
+  setConjunction,
 }: {
   aggregation: Aggregation;
   filters: Record<string, string[]>;
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
+  conjunction: Record<string, boolean>;
+  setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }) {
   const [open, setOpen] = useState(false);
   const buckets = aggregation.buckets;
@@ -57,7 +70,42 @@ export function FilterBox({
 
   return (
     <div>
-      <h3 className="font-lg font-medium pb-1">{aggregation.title}</h3>
+      <div className="flex justify-between pb-1 pr-6">
+        <h3 className="font-lg font-medium">{aggregation.title}</h3>
+        <div className="flex items-center space-x-1">
+          <Switch
+            id="airplane-mode"
+            disabled={selectedItems.length !== 0}
+            checked={conjunction[aggregation.name] || false}
+            onCheckedChange={(checked) => {
+              setConjunction((prevConjunction) => ({
+                ...prevConjunction,
+                [aggregation.name]: checked,
+              }));
+            }}
+          />
+          <Label
+            className="text-xs flex gap-2 items-center"
+            htmlFor="airplane-mode"
+          >
+            <span>Conjunction</span>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CircleHelp size={14} />
+                </TooltipTrigger>
+                <TooltipContent>
+                  Whether the filters should be AND / OR. <br /> To avoid any
+                  bugs, changing this setting is disabled after selecting any
+                  filters.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </Label>
+        </div>
+      </div>
+
       <div className="pr-6">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

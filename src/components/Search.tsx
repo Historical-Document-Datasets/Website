@@ -10,10 +10,12 @@ const Search = ({
   results,
   setResults,
   filters,
+  conjunction,
 }: {
   results: SearchResult;
   setResults: (value: object) => void;
   filters: Record<string, string[]>;
+  conjunction: Record<string, boolean>;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -31,11 +33,17 @@ const Search = ({
         language: {
           title: "Languages",
           size: 100,
-          conjunction: true,
+          conjunction: conjunction?.language || false,
         },
         format: {
           title: "Image format",
           size: 100,
+          conjunction: conjunction?.format || false,
+        },
+        mode: {
+          title: "Color mode",
+          size: 100,
+          conjunction: conjunction?.mode || false,
         },
       },
       searchableFields: ["name"],
@@ -74,7 +82,7 @@ const Search = ({
     });
 
     setResults(filteredResults);
-  }, [searchQuery, filters, setResults]);
+  }, [searchQuery, filters, setResults, conjunction]);
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
