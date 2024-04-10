@@ -1,3 +1,5 @@
+import { useTheme } from "@/ThemeProvider";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +10,7 @@ import { SquarePen, Sun } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+  const { setTheme } = useTheme();
   return (
     <header className="w-full border-b border-border/40 bg-background/95">
       <div className="container flex h-16 max-w-screen-2xl items-center">
@@ -51,9 +54,15 @@ export default function Navbar() {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>Light</DropdownMenuItem>
-              <DropdownMenuItem>Dark</DropdownMenuItem>
-              <DropdownMenuItem>System</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
