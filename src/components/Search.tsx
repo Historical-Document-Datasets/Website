@@ -183,23 +183,26 @@ const Search = ({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
-        {results.data?.items.length != 0 ? (
-          results.data?.items.map((result) => (
-            <ResultCard dataset={result} key={result.id} />
-          ))
-        ) : (
-          <p>No results found</p>
-        )}
-      </div>
-      <div className="pt-2 flex justify-center">
-        <Pagination
-          page={page}
-          setPage={setPage}
-          total={results?.pagination?.total}
-          perPage={perPage}
-        />
-      </div>
+      {results.data?.items.length != 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
+            {results.data?.items.map((result) => (
+              <ResultCard dataset={result} key={result.id} />
+            ))}
+          </div>
+
+          <div className="pt-4 flex justify-center">
+            <Pagination
+              page={page}
+              setPage={setPage}
+              total={results?.pagination?.total}
+              perPage={perPage}
+            />
+          </div>
+        </>
+      ) : (
+        <p>No results found</p>
+      )}
     </div>
   );
 };

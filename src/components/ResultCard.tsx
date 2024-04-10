@@ -8,7 +8,7 @@ function Property({ property, name }: { property: string[]; name: string }) {
   return (
     <div>
       <h4 className="pb-1 font-medium">{name}</h4>
-      <div className="flex gap-1">
+      <div className="flex flex-wrap gap-1">
         {property.map((property) => (
           <Badge key={property} variant={"outline"}>
             {property}
