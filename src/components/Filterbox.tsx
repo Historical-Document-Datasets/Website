@@ -34,12 +34,14 @@ export function FilterBox({
   setFilters,
   conjunction,
   setConjunction,
+  setPage,
 }: {
   aggregation: Aggregation;
   filters: Record<string, string[]>;
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
   conjunction: Record<string, boolean>;
   setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [open, setOpen] = useState(false);
   const buckets = aggregation.buckets;
@@ -55,6 +57,7 @@ export function FilterBox({
   };
 
   const handleSelect = (checked: string | boolean, bucket_key: string) => {
+    setPage(1);
     if (checked) {
       setFilters((prevFilters) => ({
         ...prevFilters,

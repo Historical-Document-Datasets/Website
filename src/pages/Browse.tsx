@@ -10,6 +10,7 @@ export default function Browse() {
   const [results, setResults] = useState<SearchResult>({});
   const [filters, setFilters] = useState<Record<string, string[]>>({});
   const [conjunction, setConjunction] = useState<Record<string, boolean>>({});
+  const [page, setPage] = useState(1);
 
   return (
     <div className="flex">
@@ -20,6 +21,7 @@ export default function Browse() {
         setFilters={setFilters}
         conjunction={conjunction}
         setConjunction={setConjunction}
+        setPage={setPage}
       />
       <Sheet>
         <SheetTrigger asChild>
@@ -35,6 +37,7 @@ export default function Browse() {
             setFilters={setFilters}
             conjunction={conjunction}
             setConjunction={setConjunction}
+            setPage={setPage}
           />
         </SheetContent>
       </Sheet>
@@ -45,6 +48,8 @@ export default function Browse() {
           setResults={setResults}
           filters={filters}
           conjunction={conjunction}
+          page={page}
+          setPage={setPage}
         />
       </div>
     </div>

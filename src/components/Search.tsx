@@ -14,16 +14,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import Pagination from "./Pagination";
+
 const Search = ({
   results,
   setResults,
   filters,
   conjunction,
+  page,
+  setPage,
 }: {
   results: SearchResult;
   setResults: (value: object) => void;
   filters: Record<string, string[]>;
   conjunction: Record<string, boolean>;
+  page: number;
+  setPage: (value: SetStateAction<number>) => void;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [perPage, setPerPage] = useState(20);
@@ -90,6 +96,7 @@ const Search = ({
     });
 
     const filteredResults = itemsjs.search({
+      page: page,
       per_page: perPage,
       sort: sort as "name_asc" | "name_desc",
       // @ts-expect-error field "ids" is not implemented in @types/itemsjs
@@ -98,11 +105,14 @@ const Search = ({
     });
 
     setResults(filteredResults);
-  }, [searchQuery, filters, setResults, conjunction, perPage, sort]);
+    // console.log(canGoNext());
+  }, [searchQuery, filters, setResults, conjunction, page, perPage, sort]);
+
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
     setSearchQuery(e.target.value);
+    setPage(1);
   };
 
   return (
@@ -140,6 +150,7 @@ const Search = ({
             defaultValue="20"
             onValueChange={(value) => {
               setPerPage(parseInt(value));
+              setPage(1);
             }}
           >
             <SelectTrigger className="w-24 shrink-0">
@@ -150,17 +161,28 @@ const Search = ({
               <SelectItem value="20">20</SelectItem>
               <SelectItem value="30">30</SelectItem>
               <SelectItem value="50">50</SelectItem>
-              <SelectItem value={results?.pagination?.total.toString() || ""}>
+              <SelectItem
+                value={results?.pagination?.total.toString() || "all"}
+              >
                 <b>All ({results?.pagination?.total})</b>
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
-      <p className="text-foreground/60 text-sm pb-4">
-        {results?.pagination?.total} results found in {results.timings?.total}
-        ms &mdash; Showing {results?.data?.items.length} results
-      </p>
+      <div className="flex justify-between items-center pb-2">
+        <p className="text-foreground/60 text-sm shrink-0">
+          {results?.pagination?.total} results found in {results.timings?.total}
+          ms &mdash; Showing {results?.data?.items.length} results
+        </p>
+        <Pagination
+          page={page}
+          setPage={setPage}
+          total={results?.pagination?.total}
+          perPage={perPage}
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
         {results.data?.items.length != 0 ? (
           results.data?.items.map((result) => (
@@ -169,6 +191,14 @@ const Search = ({
         ) : (
           <p>No results found</p>
         )}
+      </div>
+      <div className="pt-2 flex justify-center">
+        <Pagination
+          page={page}
+          setPage={setPage}
+          total={results?.pagination?.total}
+          perPage={perPage}
+        />
       </div>
     </div>
   );

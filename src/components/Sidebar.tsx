@@ -11,6 +11,7 @@ export default function Sidebar({
   setFilters,
   conjunction,
   setConjunction,
+  setPage,
 }: {
   mobile: boolean;
   results: SearchResult;
@@ -18,6 +19,7 @@ export default function Sidebar({
   setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
   conjunction: Record<string, boolean>;
   setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleCollapse = () => {
@@ -65,6 +67,7 @@ export default function Sidebar({
               setFilters={setFilters}
               conjunction={conjunction}
               setConjunction={setConjunction}
+              setPage={setPage}
             />
           )
         )}
