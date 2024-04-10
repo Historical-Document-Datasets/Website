@@ -6,6 +6,14 @@ import { SetStateAction, useEffect, useState } from "react";
 import ResultCard from "./ResultCard";
 import data from "./output.json";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const Search = ({
   results,
   setResults,
@@ -18,6 +26,8 @@ const Search = ({
   conjunction: Record<string, boolean>;
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [perPage, setPerPage] = useState(20);
+  const [sort, setSort] = useState("");
 
   useEffect(() => {
     const config = {
@@ -27,6 +37,10 @@ const Search = ({
         name_asc: {
           field: "name",
           order: "asc",
+        },
+        name_desc: {
+          field: "name",
+          order: "desc",
         },
       },
       aggregations: {
@@ -76,13 +90,15 @@ const Search = ({
     });
 
     const filteredResults = itemsjs.search({
+      per_page: perPage,
+      sort: sort as "name_asc" | "name_desc",
       // @ts-expect-error field "ids" is not implemented in @types/itemsjs
       ids: search_results.map((v) => v.id),
       filters: filters,
     });
 
     setResults(filteredResults);
-  }, [searchQuery, filters, setResults, conjunction]);
+  }, [searchQuery, filters, setResults, conjunction, perPage, sort]);
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
@@ -92,7 +108,7 @@ const Search = ({
   return (
     <div className="py-6 gap-8">
       <h1 className="text-3xl">Browse datasets</h1>
-      <div className="py-2">
+      <div className="py-2 flex gap-x-4 gap-y-2 flex-wrap lg:flex-nowrap">
         <Input
           type="text"
           placeholder="Type anything to search..."
@@ -100,10 +116,50 @@ const Search = ({
           onChange={handleSearchChange}
           className="h-10"
         />
+        <div className="flex gap-4 justify-end items-center lg:shrink-0">
+          <span className="text-sm shrink-0">Sort by</span>
+          <Select
+            defaultValue="none"
+            onValueChange={(value) => {
+              setSort(value);
+            }}
+          >
+            <SelectTrigger className="min-w-32">
+              <SelectValue placeholder="none" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">No sorting</SelectItem>
+              <SelectItem value="name_asc">Name (asc)</SelectItem>
+              <SelectItem value="name_desc">Name (desc)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex gap-4 justify-end items-center lg:shrink-0">
+          <span className="text-sm">Results per page</span>
+          <Select
+            defaultValue="20"
+            onValueChange={(value) => {
+              setPerPage(parseInt(value));
+            }}
+          >
+            <SelectTrigger className="w-24 shrink-0">
+              <SelectValue placeholder="30" />
+            </SelectTrigger>
+            <SelectContent className="max-w-24 min-w-0">
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="30">30</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value={results?.pagination?.total.toString() || ""}>
+                <b>All ({results?.pagination?.total})</b>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <p className="text-foreground/60 text-sm pb-4">
         {results?.pagination?.total} results found in {results.timings?.total}
-        ms.
+        ms &mdash; Showing {results?.data?.items.length} results
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 items-start ">
         {results.data?.items.length != 0 ? (
