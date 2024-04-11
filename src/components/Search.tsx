@@ -1,10 +1,9 @@
 import { Input } from "@/components/ui/input";
-import { SearchResult } from "@/utils/types";
+import { Dataset, SearchResult } from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
 import { SetStateAction, useEffect, useState } from "react";
 import ResultCard from "./ResultCard";
-import data from "./output.json";
 
 import {
   Select,
@@ -23,6 +22,7 @@ const Search = ({
   conjunction,
   page,
   setPage,
+  data,
 }: {
   results: SearchResult;
   setResults: (value: object) => void;
@@ -30,6 +30,7 @@ const Search = ({
   conjunction: Record<string, boolean>;
   page: number;
   setPage: (value: SetStateAction<number>) => void;
+  data: Dataset[] | [];
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [perPage, setPerPage] = useState(20);
@@ -105,8 +106,16 @@ const Search = ({
     });
 
     setResults(filteredResults);
-    // console.log(canGoNext());
-  }, [searchQuery, filters, setResults, conjunction, page, perPage, sort]);
+  }, [
+    searchQuery,
+    filters,
+    setResults,
+    conjunction,
+    page,
+    perPage,
+    sort,
+    data,
+  ]);
 
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
