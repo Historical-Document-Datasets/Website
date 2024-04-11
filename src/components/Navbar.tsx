@@ -35,7 +35,10 @@ export default function Navbar() {
           </nav>
         </div>
         <div className="flex flex-1 items-center gap-1 justify-end">
-          <a target="_blank" href="https://github.com/">
+          <a
+            target="_blank"
+            href="https://github.com/Historical-Document-Datasets/"
+          >
             <div className="inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground h-9 py-2 w-9">
               <svg viewBox="0 0 438.549 438.549" className="h-4 w-4">
                 <path

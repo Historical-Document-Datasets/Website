@@ -65,7 +65,7 @@ export default function Browse() {
     );
 
   return (
-    <div className="flex">
+    <div className="flex h-full">
       <Sidebar
         mobile={false}
         results={results}

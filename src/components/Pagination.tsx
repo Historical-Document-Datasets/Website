@@ -19,9 +19,11 @@ export default function Pagination({
 }) {
   return (
     <div className="flex gap-8">
-      <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-        Page {page} of {Math.ceil((total ?? 0) / perPage)}
-      </div>
+      {total ?? 0 > 0 ? (
+        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          Page {page} of {Math.ceil((total ?? 0) / perPage)}
+        </div>
+      ) : null}
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -45,7 +47,7 @@ export default function Pagination({
           variant="outline"
           className="h-8 w-8 p-0"
           onClick={() => setPage(page + 1)}
-          disabled={page === Math.ceil((total ?? 0) / perPage)}
+          disabled={page === Math.ceil((total ?? 0) / perPage) || total === 0}
         >
           <span className="sr-only">Go to next page</span>
           <ChevronRight className="h-4 w-4" />
@@ -54,7 +56,7 @@ export default function Pagination({
           variant="outline"
           className="h-8 w-8 p-0"
           onClick={() => setPage(Math.ceil((total ?? 0) / perPage))}
-          disabled={page === Math.ceil((total ?? 0) / perPage)}
+          disabled={page === Math.ceil((total ?? 0) / perPage) || total === 0}
         >
           <span className="sr-only">Go to next page</span>
           <ChevronsRight className="h-4 w-4" />
