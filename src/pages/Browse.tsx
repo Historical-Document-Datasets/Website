@@ -3,8 +3,9 @@ import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SearchResult } from "@/utils/types";
-import { Filter } from "lucide-react";
-import useSWR from "swr";
+import { CircleAlert, Filter, LoaderCircle } from "lucide-react";
+
+import useSWRImmutable from "swr/immutable";
 
 import { useState } from "react";
 
@@ -16,13 +17,52 @@ export default function Browse() {
   const [conjunction, setConjunction] = useState<Record<string, boolean>>({});
   const [page, setPage] = useState(1);
 
-  const { data, error, isValidating } = useSWR(
+  const {
+    data = [],
+    error,
+    isLoading = true,
+  } = useSWRImmutable(
     "https://raw.githubusercontent.com/Historical-Document-Datasets/Catalog/main/catalog.json",
     fetcher
   );
 
-  if (error) return <div>Error</div>;
-  if (isValidating) return <div>Loading...</div>;
+  if (error)
+    return (
+      <div className="flex items-center pt-6 flex-col">
+        <div className="w-full rounded-lg border px-4 py-3 text-sm flex items-center justify-between border-destructive/50 dark:border-destructive max-w-screen-sm">
+          <div className="flex gap-2 items-center text-destructive">
+            <CircleAlert strokeWidth={1.5} />
+            <div>
+              <h5 className="font-medium leading-none tracking-tight mb-1">
+                Uh oh!
+              </h5>
+              <p className="text-sm leading-none">
+                An error occurred while fetching the data. Please try again
+                later.
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <LoaderCircle className="animate-spin w-4 h-4" />
+          <h2>Loading...</h2>
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex">
