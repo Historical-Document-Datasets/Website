@@ -5,7 +5,7 @@ export interface Dataset {
   name: string;
   statistics: string;
   class: string;
-  task: string;
+  task: string[];
   language: string[];
   document_type: string;
   mode: string[];

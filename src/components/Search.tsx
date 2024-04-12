@@ -52,9 +52,14 @@ const Search = ({
       },
       aggregations: {
         language: {
-          title: "Languages",
+          title: "Language",
           size: 100,
           conjunction: conjunction?.language || false,
+        },
+        task: {
+          title: "Task",
+          size: 100,
+          conjunction: conjunction?.task || false,
         },
         format: {
           title: "Image format",

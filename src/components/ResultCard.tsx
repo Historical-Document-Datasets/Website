@@ -26,8 +26,9 @@ export default function ResultCard({ dataset }: { dataset: Dataset }) {
         <h3 className="font-semibold text-xl">{dataset.name}</h3>
         <p className="text-muted-foreground text-sm">{dataset.task}</p>
       </div>
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-x-4 gap-y-2 flex-wrap">
         <Property property={dataset.language} name="Languages" />
+        <Property property={dataset.task} name="Tasks" />
         <Property property={dataset.format} name="Image formats" />
         <Property property={dataset.mode} name="Color modes" />
         <div>
