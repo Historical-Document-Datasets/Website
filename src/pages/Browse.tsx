@@ -3,13 +3,13 @@ import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SearchResult } from "@/utils/types";
-import { CircleAlert, Filter, LoaderCircle } from "lucide-react";
+import { Filter } from "lucide-react";
 
 import useSWRImmutable from "swr/immutable";
 
+import { Error, Loader } from "@/components/Loaders";
+import { fetcher } from "@/utils/helpers";
 import { useState } from "react";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function Browse() {
   const [results, setResults] = useState<SearchResult>({});
@@ -26,43 +26,9 @@ export default function Browse() {
     fetcher
   );
 
-  if (error)
-    return (
-      <div className="flex items-center pt-6 flex-col">
-        <div className="w-full rounded-lg border px-4 py-3 text-sm flex items-center justify-between border-destructive/50 dark:border-destructive max-w-screen-sm">
-          <div className="flex gap-2 items-center text-destructive">
-            <CircleAlert strokeWidth={1.5} />
-            <div>
-              <h5 className="font-medium leading-none tracking-tight mb-1">
-                Uh oh!
-              </h5>
-              <p className="text-sm leading-none">
-                An error occurred while fetching the data. Please try again
-                later.
-              </p>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-7"
-            onClick={() => window.location.reload()}
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
+  if (error) return <Error />;
 
-  if (isLoading)
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <LoaderCircle className="animate-spin w-4 h-4" />
-          <h2>Loading...</h2>
-        </div>
-      </div>
-    );
+  if (isLoading) return <Loader />;
 
   return (
     <div className="flex h-full">
