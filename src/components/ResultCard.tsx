@@ -1,10 +1,17 @@
 import { Dataset } from "@/utils/types";
-import { PencilLine, Send } from "lucide-react";
+import { PencilLine, Send, SquareArrowOutUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
-function Property({ property, name }: { property: string[]; name: string }) {
+export function Property({
+  property,
+  name,
+}: {
+  property: string[];
+  name: string;
+}) {
   return (
     <div>
       <h4 className="pb-1 font-medium">{name}</h4>
@@ -22,9 +29,13 @@ function Property({ property, name }: { property: string[]; name: string }) {
 export default function ResultCard({ dataset }: { dataset: Dataset }) {
   return (
     <div className="p-4 border rounded-xl">
-      <div className="pb-2">
+      <div className="flex justify-between items-start">
         <h3 className="font-semibold text-xl">{dataset.name}</h3>
-        <p className="text-muted-foreground text-sm">{dataset.task}</p>
+        <Link to={`/browse/${dataset.id}`} title="Open detail">
+          <Button size={"icon_sm"} variant={"outline"}>
+            <SquareArrowOutUpRight size={13} />
+          </Button>
+        </Link>
       </div>
       <div className="flex gap-x-4 gap-y-2 flex-wrap">
         <Property property={dataset.language} name="Languages" />
