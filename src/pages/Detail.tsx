@@ -63,6 +63,10 @@ export default function Detail() {
             <h4 className="font-medium">Class:</h4>
             <span className="text-gray-600">{dataset.class}</span>
           </div>
+          <div className="border rounded-xl p-4 w-full md:w-auto">
+            <h4 className="font-medium">Document type:</h4>
+            <span className="text-gray-600">{dataset.document_type}</span>
+          </div>
         </div>
         <Separator className="my-4" />
         <div>
