@@ -138,6 +138,7 @@ const Search = ({
           placeholder="Type anything to search..."
           value={searchQuery}
           onChange={handleSearchChange}
+          autoFocus
           className="h-10"
         />
         <div className="flex gap-4 justify-end items-center lg:shrink-0">
