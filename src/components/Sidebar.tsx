@@ -1,30 +1,24 @@
-import { Aggregation, SearchResult } from "@/utils/types";
+import { Aggregation, SearchAction, SearchState } from "@/utils/types";
 import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, useState } from "react";
 import { FilterBox } from "./Filterbox";
 import { Button } from "./ui/button";
 
 export default function Sidebar({
   mobile,
-  results,
-  filters,
-  setFilters,
-  conjunction,
-  setConjunction,
-  setPage,
+  state,
+  dispatch,
 }: {
   mobile: boolean;
-  results: SearchResult;
-  filters: Record<string, string[]>;
-  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-  conjunction: Record<string, boolean>;
-  setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  state: SearchState;
+  dispatch: Dispatch<SearchAction>;
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const { results } = state;
 
   return (
     <div
@@ -58,16 +52,13 @@ export default function Sidebar({
         )}
       </div>
       <div className={isCollapsed ? "hidden" : "flex flex-col gap-4"}>
-        {Object.values(results.data?.aggregations || {}).map(
+        {Object.values(results?.data?.aggregations || {}).map(
           (aggregation: Aggregation) => (
             <FilterBox
               key={aggregation.name}
               aggregation={aggregation}
-              filters={filters}
-              setFilters={setFilters}
-              conjunction={conjunction}
-              setConjunction={setConjunction}
-              setPage={setPage}
+              state={state}
+              dispatch={dispatch}
             />
           )
         )}

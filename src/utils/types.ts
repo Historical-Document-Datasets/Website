@@ -32,8 +32,28 @@ export type SearchResult = {
   timings?: { total: number };
   data?: {
     items: Dataset[];
-    allFilteredItems: Dataset[];
+    allFilteredItems: Dataset[] | null;
     aggregations: Aggregation[];
   };
   pagination?: ItemsJS.Pagination;
 };
+
+export interface SearchState {
+  results: SearchResult;
+  filters: Record<string, string[]>;
+  conjunction: Record<string, boolean>;
+  page: number;
+}
+
+export enum SearchActionTypes {
+  SET_RESULTS = "SET_RESULTS",
+  SET_FILTERS = "SET_FILTERS",
+  SET_CONJUNCTION = "SET_CONJUNCTION",
+  SET_PAGE = "SET_PAGE",
+}
+
+export type SearchAction =
+  | { type: "SET_RESULTS"; payload: object }
+  | { type: "SET_FILTERS"; payload: Record<string, string[]> }
+  | { type: "SET_CONJUNCTION"; payload: Record<string, boolean> }
+  | { type: "SET_PAGE"; payload: number };

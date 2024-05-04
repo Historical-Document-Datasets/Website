@@ -15,8 +15,13 @@ import {
 import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { Aggregation } from "@/utils/types";
-import { useState } from "react";
+import {
+  Aggregation,
+  SearchAction,
+  SearchActionTypes,
+  SearchState,
+} from "@/utils/types";
+import { Dispatch, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
@@ -30,42 +35,47 @@ import {
 
 export function FilterBox({
   aggregation,
-  filters,
-  setFilters,
-  conjunction,
-  setConjunction,
-  setPage,
+  state,
+  dispatch,
 }: {
   aggregation: Aggregation;
-  filters: Record<string, string[]>;
-  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-  conjunction: Record<string, boolean>;
-  setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  state: SearchState;
+  dispatch: Dispatch<SearchAction>;
 }) {
   const [open, setOpen] = useState(false);
   const buckets = aggregation.buckets;
+  const { filters, conjunction } = state;
+
   const selectedItems = filters[aggregation.name] || [];
 
   const removeItem = (bucket_key: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [aggregation.name]: (prevFilters[aggregation.name] || []).filter(
-        (value) => value !== bucket_key
-      ),
-    }));
+    dispatch({
+      type: SearchActionTypes.SET_FILTERS,
+      payload: {
+        [aggregation.name]: (filters[aggregation.name] || []).filter(
+          (value) => value !== bucket_key
+        ),
+      },
+    });
   };
 
   const handleSelect = (checked: string | boolean, bucket_key: string) => {
-    setPage(1);
+    dispatch({
+      type: SearchActionTypes.SET_PAGE,
+      payload: 1,
+    });
+
     if (checked) {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [aggregation.name]: [
-          ...(prevFilters[aggregation.name] || []),
-          bucket_key,
-        ],
-      }));
+      dispatch({
+        type: SearchActionTypes.SET_FILTERS,
+        payload: {
+          [aggregation.name]: [
+            ...(filters[aggregation.name] || []),
+            bucket_key,
+          ],
+        },
+      });
+      console.log(filters);
     } else {
       removeItem(bucket_key);
     }
@@ -81,10 +91,12 @@ export function FilterBox({
             disabled={selectedItems.length !== 0}
             checked={conjunction[aggregation.name] || false}
             onCheckedChange={(checked) => {
-              setConjunction((prevConjunction) => ({
-                ...prevConjunction,
-                [aggregation.name]: checked,
-              }));
+              dispatch({
+                type: SearchActionTypes.SET_CONJUNCTION,
+                payload: {
+                  [aggregation.name]: checked,
+                },
+              });
             }}
           />
           <Label

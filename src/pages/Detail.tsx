@@ -24,8 +24,6 @@ export default function Detail() {
   if (isLoading) return <Loader />;
 
   const dataset: Dataset = data.find((item: Dataset) => item.id === id);
-  console.log(dataset);
-
   if (dataset === undefined) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
