@@ -53,7 +53,7 @@ export enum SearchActionTypes {
 }
 
 export type SearchAction =
-  | { type: "SET_RESULTS"; payload: SearchResult }
+  | { type: "SET_RESULTS"; payload: object }
   | { type: "SET_FILTERS"; payload: Record<string, string[]> }
   | { type: "SET_CONJUNCTION"; payload: Record<string, boolean> }
   | { type: "SET_PAGE"; payload: number };
