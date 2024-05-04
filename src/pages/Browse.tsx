@@ -1,21 +1,46 @@
-import Search from "@/components/Search";
-import Sidebar from "@/components/Sidebar";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { SearchResult } from "@/utils/types";
-import { Filter } from "lucide-react";
+import { SearchAction, SearchState } from "@/utils/types";
 
 import useSWRImmutable from "swr/immutable";
 
 import { Error, Loader } from "@/components/Loaders";
+import Search from "@/components/Search";
+import Sidebar from "@/components/Sidebar";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { fetcher } from "@/utils/helpers";
-import { useState } from "react";
+import { Filter } from "lucide-react";
+import { Reducer, useReducer } from "react";
 
 export default function Browse() {
-  const [results, setResults] = useState<SearchResult>({});
-  const [filters, setFilters] = useState<Record<string, string[]>>({});
-  const [conjunction, setConjunction] = useState<Record<string, boolean>>({});
-  const [page, setPage] = useState(1);
+  const searchState: SearchState = {
+    results: {},
+    filters: {},
+    conjunction: {},
+    page: 1,
+  };
+
+  const reducer: Reducer<SearchState, SearchAction> = (
+    state: SearchState,
+    action: SearchAction
+  ) => {
+    switch (action.type) {
+      case "SET_RESULTS":
+        return { ...state, results: action.payload };
+      case "SET_FILTERS":
+        return { ...state, filters: { ...state.filters, ...action.payload } };
+      case "SET_CONJUNCTION":
+        return {
+          ...state,
+          conjunction: { ...state.conjunction, ...action.payload },
+        };
+      case "SET_PAGE":
+        return { ...state, page: action.payload };
+      default:
+        throw new TypeError("Invalid action type");
+    }
+  };
+
+  const [state, dispatch] = useReducer(reducer, searchState);
 
   const {
     data = [],
@@ -32,15 +57,7 @@ export default function Browse() {
 
   return (
     <div className="flex h-full">
-      <Sidebar
-        mobile={false}
-        results={results}
-        filters={filters}
-        setFilters={setFilters}
-        conjunction={conjunction}
-        setConjunction={setConjunction}
-        setPage={setPage}
-      />
+      <Sidebar mobile={false} state={state} dispatch={dispatch} />
       <Sheet>
         <SheetTrigger asChild>
           <Button className="mr-4 mt-6 md:hidden" variant="outline" size="icon">
@@ -48,28 +65,12 @@ export default function Browse() {
           </Button>
         </SheetTrigger>
         <SheetContent side={"left"}>
-          <Sidebar
-            mobile={true}
-            results={results}
-            filters={filters}
-            setFilters={setFilters}
-            conjunction={conjunction}
-            setConjunction={setConjunction}
-            setPage={setPage}
-          />
+          <Sidebar mobile={true} state={state} dispatch={dispatch} />
         </SheetContent>
       </Sheet>
 
       <div className="flex-1">
-        <Search
-          results={results}
-          setResults={setResults}
-          filters={filters}
-          conjunction={conjunction}
-          page={page}
-          setPage={setPage}
-          data={data}
-        />
+        <Search state={state} dispatch={dispatch} data={data} />
       </div>
     </div>
   );
