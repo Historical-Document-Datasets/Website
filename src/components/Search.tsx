@@ -7,7 +7,7 @@ import {
 } from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import ResultCard from "./ResultCard";
 
 import {
@@ -29,10 +29,7 @@ const Search = ({
   dispatch: Dispatch<SearchAction>;
   data: Dataset[] | [];
 }) => {
-  const [perPage, setPerPage] = useState(20);
-  const [sort, setSort] = useState("");
-
-  const { query, results, filters, conjunction, page } = state;
+  const { query, sort, perPage, results, filters, conjunction, page } = state;
 
   useEffect(() => {
     const config = {
@@ -137,7 +134,12 @@ const Search = ({
           <Select
             defaultValue="none"
             onValueChange={(value) => {
-              setSort(value);
+              console.log(value);
+              dispatch({
+                type: SearchActionTypes.SET_SORT,
+                payload: value as "name_asc" | "name_desc" | "none",
+              });
+              console.log(sort);
             }}
           >
             <SelectTrigger className="min-w-32">
@@ -153,9 +155,12 @@ const Search = ({
         <div className="flex gap-4 justify-end items-center lg:shrink-0">
           <span className="text-sm">Results per page</span>
           <Select
-            defaultValue="20"
+            defaultValue={perPage.toString() || "20"}
             onValueChange={(value) => {
-              setPerPage(parseInt(value));
+              dispatch({
+                type: SearchActionTypes.SET_PER_PAGE,
+                payload: parseInt(value),
+              });
               dispatch({ type: SearchActionTypes.SET_PAGE, payload: 1 });
             }}
           >
@@ -168,7 +173,7 @@ const Search = ({
               <SelectItem value="30">30</SelectItem>
               <SelectItem value="50">50</SelectItem>
               <SelectItem
-                value={results?.pagination?.total.toString() || "all"}
+                value={results?.pagination?.total?.toString() || "all"}
               >
                 <b>All ({results?.pagination?.total})</b>
               </SelectItem>

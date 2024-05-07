@@ -15,6 +15,8 @@ import { useSearchParams } from "react-router-dom";
 export default function Browse() {
   const searchState: SearchState = {
     query: "",
+    sort: "none",
+    perPage: 20,
     results: {},
     filters: {},
     conjunction: {},
@@ -28,6 +30,10 @@ export default function Browse() {
     switch (action.type) {
       case "SET_QUERY":
         return { ...state, query: action.payload };
+      case "SET_SORT":
+        return { ...state, sort: action.payload };
+      case "SET_PER_PAGE":
+        return { ...state, perPage: action.payload };
       case "SET_RESULTS":
         return { ...state, results: action.payload };
       case "SET_FILTERS":
@@ -50,13 +56,22 @@ export default function Browse() {
   useEffect(() => {
     const query = searchParams.get("query") || "";
     const page = parseInt(searchParams.get("page") || "1");
+    const sort = searchParams.get("sort") as "name_asc" | "name_desc" | "none";
+    const perPage = parseInt(searchParams.get("perPage") || "20");
 
     dispatch({ type: "SET_QUERY", payload: query });
     dispatch({ type: "SET_PAGE", payload: page });
+    dispatch({ type: "SET_SORT", payload: sort });
+    dispatch({ type: "SET_PER_PAGE", payload: perPage });
   }, []);
 
   useEffect(() => {
-    const params: { query?: string; page?: string } = {};
+    const params: {
+      query?: string;
+      page?: string;
+      sort?: "name_asc" | "name_desc" | "none";
+      perPage?: string;
+    } = {};
 
     if (state.query !== "") {
       params.query = state.query;
@@ -66,8 +81,16 @@ export default function Browse() {
       params.page = state.page.toString();
     }
 
+    if (state.sort !== "none") {
+      params.sort = state.sort;
+    }
+
+    if (state.perPage !== 20) {
+      params.perPage = state.perPage.toString();
+    }
+
     setSearchParams(params);
-  }, [state.page, state.query, setSearchParams]);
+  }, [state.page, state.query, state.sort, state.perPage, setSearchParams]);
 
   const {
     data = [],
