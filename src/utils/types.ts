@@ -39,6 +39,7 @@ export type SearchResult = {
 };
 
 export interface SearchState {
+  query: string;
   results: SearchResult;
   filters: Record<string, string[]>;
   conjunction: Record<string, boolean>;
@@ -46,6 +47,7 @@ export interface SearchState {
 }
 
 export enum SearchActionTypes {
+  SET_QUERY = "SET_QUERY",
   SET_RESULTS = "SET_RESULTS",
   SET_FILTERS = "SET_FILTERS",
   SET_CONJUNCTION = "SET_CONJUNCTION",
@@ -53,6 +55,7 @@ export enum SearchActionTypes {
 }
 
 export type SearchAction =
+  | { type: "SET_QUERY"; payload: string }
   | { type: "SET_RESULTS"; payload: object }
   | { type: "SET_FILTERS"; payload: Record<string, string[]> }
   | { type: "SET_CONJUNCTION"; payload: Record<string, boolean> }

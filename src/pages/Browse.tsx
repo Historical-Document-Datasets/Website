@@ -9,10 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { fetcher } from "@/utils/helpers";
 import { Filter } from "lucide-react";
-import { Reducer, useReducer } from "react";
+import { Reducer, useEffect, useReducer } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function Browse() {
   const searchState: SearchState = {
+    query: "",
     results: {},
     filters: {},
     conjunction: {},
@@ -24,6 +26,8 @@ export default function Browse() {
     action: SearchAction
   ) => {
     switch (action.type) {
+      case "SET_QUERY":
+        return { ...state, query: action.payload };
       case "SET_RESULTS":
         return { ...state, results: action.payload };
       case "SET_FILTERS":
@@ -41,6 +45,29 @@ export default function Browse() {
   };
 
   const [state, dispatch] = useReducer(reducer, searchState);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const query = searchParams.get("query") || "";
+    const page = parseInt(searchParams.get("page") || "1");
+
+    dispatch({ type: "SET_QUERY", payload: query });
+    dispatch({ type: "SET_PAGE", payload: page });
+  }, []);
+
+  useEffect(() => {
+    const params: { query?: string; page?: string } = {};
+
+    if (state.query !== "") {
+      params.query = state.query;
+    }
+
+    if (state.page !== 1) {
+      params.page = state.page.toString();
+    }
+
+    setSearchParams(params);
+  }, [state.page, state.query, setSearchParams]);
 
   const {
     data = [],

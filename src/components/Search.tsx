@@ -32,9 +32,7 @@ const Search = ({
   const [perPage, setPerPage] = useState(20);
   const [sort, setSort] = useState("");
 
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const { results, filters, conjunction, page } = state;
+  const { query, results, filters, conjunction, page } = state;
 
   useEffect(() => {
     const config = {
@@ -96,7 +94,7 @@ const Search = ({
     };
 
     // Search with MiniSearch
-    const search_results = search(searchQuery, {
+    const search_results = search(query, {
       prefix: true,
       fuzzy: 0.2,
     });
@@ -111,12 +109,15 @@ const Search = ({
     });
 
     dispatch({ type: SearchActionTypes.SET_RESULTS, payload: filteredResults });
-  }, [searchQuery, filters, conjunction, page, perPage, sort, data, dispatch]);
+  }, [query, filters, conjunction, page, perPage, sort, data, dispatch]);
 
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
-    setSearchQuery(e.target.value);
+    dispatch({
+      type: SearchActionTypes.SET_QUERY,
+      payload: e.target.value as string,
+    });
     dispatch({ type: SearchActionTypes.SET_PAGE, payload: 1 });
   };
 
@@ -127,7 +128,7 @@ const Search = ({
         <Input
           type="text"
           placeholder="Type anything to search..."
-          value={searchQuery}
+          value={query}
           onChange={handleSearchChange}
           className="h-10"
         />
