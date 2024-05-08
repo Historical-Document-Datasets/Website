@@ -36,8 +36,22 @@ export default function Browse() {
         return { ...state, perPage: action.payload };
       case "SET_RESULTS":
         return { ...state, results: action.payload };
-      case "SET_FILTERS":
+      case "SET_FILTERS": {
+        // if filter is empty, remove it from the filters object
+        if (
+          Object.values(action.payload).length != 0 &&
+          Object.values(action.payload)[0].length === 0
+        ) {
+          const newFilters = Object.fromEntries(
+            Object.entries(state.filters).filter(
+              ([_]) => _ !== Object.keys(action.payload)[0]
+            )
+          );
+          return { ...state, filters: newFilters };
+        }
+
         return { ...state, filters: { ...state.filters, ...action.payload } };
+      }
       case "SET_CONJUNCTION":
         return {
           ...state,
@@ -56,13 +70,18 @@ export default function Browse() {
   useEffect(() => {
     const query = searchParams.get("query") || "";
     const page = parseInt(searchParams.get("page") || "1");
-    const sort = searchParams.get("sort") as "name_asc" | "name_desc" | "none";
+    let sort = searchParams.get("sort") as "name_asc" | "name_desc" | "none";
+    if (sort === null) {
+      sort = "none";
+    }
     const perPage = parseInt(searchParams.get("perPage") || "20");
+    const filters = JSON.parse(searchParams.get("filters") || "{}");
 
     dispatch({ type: "SET_QUERY", payload: query });
     dispatch({ type: "SET_PAGE", payload: page });
     dispatch({ type: "SET_SORT", payload: sort });
     dispatch({ type: "SET_PER_PAGE", payload: perPage });
+    dispatch({ type: "SET_FILTERS", payload: filters });
   }, []);
 
   useEffect(() => {
@@ -71,6 +90,7 @@ export default function Browse() {
       page?: string;
       sort?: "name_asc" | "name_desc" | "none";
       perPage?: string;
+      filters?: string;
     } = {};
 
     if (state.query !== "") {
@@ -89,8 +109,19 @@ export default function Browse() {
       params.perPage = state.perPage.toString();
     }
 
+    if (Object.keys(state.filters).length > 0) {
+      params.filters = JSON.stringify(state.filters);
+    }
+
     setSearchParams(params);
-  }, [state.page, state.query, state.sort, state.perPage, setSearchParams]);
+  }, [
+    state.page,
+    state.query,
+    state.sort,
+    state.perPage,
+    state.filters,
+    setSearchParams,
+  ]);
 
   const {
     data = [],

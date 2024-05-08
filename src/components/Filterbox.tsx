@@ -75,7 +75,6 @@ export function FilterBox({
           ],
         },
       });
-      console.log(filters);
     } else {
       removeItem(bucket_key);
     }

@@ -134,12 +134,10 @@ const Search = ({
           <Select
             defaultValue="none"
             onValueChange={(value) => {
-              console.log(value);
               dispatch({
                 type: SearchActionTypes.SET_SORT,
-                payload: value as "name_asc" | "name_desc" | "none",
+                payload: value as "name_asc" | "name_desc",
               });
-              console.log(sort);
             }}
           >
             <SelectTrigger className="min-w-32">
