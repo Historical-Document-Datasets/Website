@@ -23,6 +23,12 @@ export default function Browse() {
     page: 1,
   };
 
+  const filterValues = (object: object, payload: object) => {
+    return Object.fromEntries(
+      Object.entries(object).filter(([_]) => _ !== Object.keys(payload)[0])
+    );
+  };
+
   const reducer: Reducer<SearchState, SearchAction> = (
     state: SearchState,
     action: SearchAction
@@ -42,17 +48,24 @@ export default function Browse() {
           Object.values(action.payload).length != 0 &&
           Object.values(action.payload)[0].length === 0
         ) {
-          const newFilters = Object.fromEntries(
-            Object.entries(state.filters).filter(
-              ([_]) => _ !== Object.keys(action.payload)[0]
-            )
-          );
+          const newFilters = filterValues(state.filters, action.payload);
           return { ...state, filters: newFilters };
         }
 
         return { ...state, filters: { ...state.filters, ...action.payload } };
       }
       case "SET_CONJUNCTION":
+        // if conjunction for a filter is false, remove it from the conjunction object
+        if (
+          Object.values(action.payload).length != 0 &&
+          Object.values(action.payload)[0] === false
+        ) {
+          const newConjunction = filterValues(
+            state.conjunction,
+            action.payload
+          );
+          return { ...state, conjunction: newConjunction };
+        }
         return {
           ...state,
           conjunction: { ...state.conjunction, ...action.payload },
@@ -76,12 +89,14 @@ export default function Browse() {
     }
     const perPage = parseInt(searchParams.get("perPage") || "20");
     const filters = JSON.parse(searchParams.get("filters") || "{}");
+    const conjunction = JSON.parse(searchParams.get("conjunction") || "{}");
 
     dispatch({ type: "SET_QUERY", payload: query });
     dispatch({ type: "SET_PAGE", payload: page });
     dispatch({ type: "SET_SORT", payload: sort });
     dispatch({ type: "SET_PER_PAGE", payload: perPage });
     dispatch({ type: "SET_FILTERS", payload: filters });
+    dispatch({ type: "SET_CONJUNCTION", payload: conjunction });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -92,6 +107,7 @@ export default function Browse() {
       sort?: "name_asc" | "name_desc" | "none";
       perPage?: string;
       filters?: string;
+      conjunction?: string;
     } = {};
 
     if (state.query !== "") {
@@ -114,6 +130,10 @@ export default function Browse() {
       params.filters = JSON.stringify(state.filters);
     }
 
+    if (Object.keys(state.conjunction).length > 0) {
+      params.conjunction = JSON.stringify(state.conjunction);
+    }
+
     setSearchParams(params);
   }, [
     state.page,
@@ -121,6 +141,7 @@ export default function Browse() {
     state.sort,
     state.perPage,
     state.filters,
+    state.conjunction,
     setSearchParams,
   ]);
 
