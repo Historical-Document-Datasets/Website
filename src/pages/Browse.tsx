@@ -82,6 +82,7 @@ export default function Browse() {
     dispatch({ type: "SET_SORT", payload: sort });
     dispatch({ type: "SET_PER_PAGE", payload: perPage });
     dispatch({ type: "SET_FILTERS", payload: filters });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
