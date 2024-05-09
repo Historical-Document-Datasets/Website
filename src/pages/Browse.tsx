@@ -46,10 +46,7 @@ export default function Browse() {
     data = [],
     error,
     isLoading = true,
-  } = useSWRImmutable(
-    "https://raw.githubusercontent.com/Historical-Document-Datasets/Catalog/main/catalog.json",
-    fetcher
-  );
+  } = useSWRImmutable(import.meta.env.VITE_CATALOG_URL, fetcher);
 
   if (error) return <Error />;
 
