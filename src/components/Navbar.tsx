@@ -20,7 +20,7 @@ export default function Navbar() {
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             <Link
-              to={"browse/"}
+              to={"browse"}
               className="hover:text-foreground/80 text-foreground/60"
             >
               Browse
