@@ -82,14 +82,31 @@ export default function Browse() {
 
   useEffect(() => {
     const query = searchParams.get("query") || "";
-    const page = parseInt(searchParams.get("page") || "1");
+    const page = parseInt(searchParams.get("page") || "1") || 1; // TODO: add validation
+
     let sort = searchParams.get("sort") as "name_asc" | "name_desc" | "none";
     if (sort === null) {
       sort = "none";
     }
-    const perPage = parseInt(searchParams.get("perPage") || "20");
-    const filters = JSON.parse(searchParams.get("filters") || "{}");
-    const conjunction = JSON.parse(searchParams.get("conjunction") || "{}");
+    let perPage = parseInt(searchParams.get("perPage") || "20"); // TODO: add "all"
+    const possibleValues = [10, 20, 30, 50];
+    if (!possibleValues.includes(perPage)) {
+      perPage = 20;
+    }
+
+    let filters = {};
+    try {
+      filters = JSON.parse(searchParams.get("filters") || "{}");
+    } catch (e) {
+      console.error(e);
+    }
+
+    let conjunction = {};
+    try {
+      conjunction = JSON.parse(searchParams.get("conjunction") || "{}");
+    } catch (e) {
+      console.log(e);
+    }
 
     dispatch({ type: "SET_QUERY", payload: query });
     dispatch({ type: "SET_PAGE", payload: page });
