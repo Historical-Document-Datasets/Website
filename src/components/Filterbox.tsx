@@ -82,7 +82,7 @@ export function FilterBox({
 
   return (
     <div>
-      <div className="flex justify-between pb-1 pr-6">
+      <div className="flex justify-between pb-1">
         <h3 className="font-lg font-medium">{aggregation.title}</h3>
         <div className="flex items-center space-x-1">
           <Switch
@@ -120,67 +120,63 @@ export function FilterBox({
         </div>
       </div>
 
-      <div className="pr-6">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
-              <div className="flex flex-wrap gap-1">
-                {selectedItems.length > 0 ? (
-                  <>
-                    {selectedItems.map((key) => (
-                      <Badge
-                        variant={"outline"}
-                        className="font-medium"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          removeItem(key);
-                        }}
-                        key={key}
-                      >
-                        <span className="pr-1">{key}</span> ×
-                      </Badge>
-                    ))}
-                  </>
-                ) : (
-                  <p className="pl-1">
-                    Select {aggregation.title.toLowerCase()}
-                  </p>
-                )}
-              </div>
-              {open ? (
-                <ChevronUp className="h-4" />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
+            <div className="flex flex-wrap gap-1">
+              {selectedItems.length > 0 ? (
+                <>
+                  {selectedItems.map((key) => (
+                    <Badge
+                      variant={"outline"}
+                      className="font-medium"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        removeItem(key);
+                      }}
+                      key={key}
+                    >
+                      <span className="pr-1">{key}</span> ×
+                    </Badge>
+                  ))}
+                </>
               ) : (
-                <ChevronDown className="h-4" />
+                <p className="pl-1">Select {aggregation.title.toLowerCase()}</p>
               )}
             </div>
-          </PopoverTrigger>
-          <PopoverContent className="p-0 w-58" side="right" align="start">
-            <Command>
-              <CommandInput placeholder="Search languages..." />
-              <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup>
-                  {buckets.map((bucket) => (
-                    <CommandItem key={bucket.key} value={bucket.key}>
-                      <Checkbox
-                        id={bucket.key}
-                        checked={selectedItems.includes(bucket.key)}
-                        onCheckedChange={(checked) =>
-                          handleSelect(checked, bucket.key)
-                        }
-                        className="mr-2"
-                      />
-                      <label htmlFor={bucket.key} className="cursor-pointer">
-                        {bucket.key} ({bucket.doc_count})
-                      </label>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+            {open ? (
+              <ChevronUp className="h-4" />
+            ) : (
+              <ChevronDown className="h-4" />
+            )}
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="p-0 w-58" side="right" align="start">
+          <Command>
+            <CommandInput placeholder="Search languages..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                {buckets.map((bucket) => (
+                  <CommandItem key={bucket.key} value={bucket.key}>
+                    <Checkbox
+                      id={bucket.key}
+                      checked={selectedItems.includes(bucket.key)}
+                      onCheckedChange={(checked) =>
+                        handleSelect(checked, bucket.key)
+                      }
+                      className="mr-2"
+                    />
+                    <label htmlFor={bucket.key} className="cursor-pointer">
+                      {bucket.key} ({bucket.doc_count})
+                    </label>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

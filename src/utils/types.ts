@@ -56,6 +56,7 @@ export enum SearchActionTypes {
   SET_FILTERS = "SET_FILTERS",
   SET_CONJUNCTION = "SET_CONJUNCTION",
   SET_PAGE = "SET_PAGE",
+  CLEAR_FILTERS = "CLEAR_FILTERS",
 }
 
 export type SearchAction =
@@ -65,4 +66,5 @@ export type SearchAction =
   | { type: "SET_RESULTS"; payload: object }
   | { type: "SET_FILTERS"; payload: Record<string, string[]> }
   | { type: "SET_CONJUNCTION"; payload: Record<string, boolean> }
-  | { type: "SET_PAGE"; payload: number };
+  | { type: "SET_PAGE"; payload: number }
+  | { type: "CLEAR_FILTERS" };

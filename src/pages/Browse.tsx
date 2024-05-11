@@ -8,7 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { fetcher } from "@/utils/helpers";
-import { Filter } from "lucide-react";
+import { ArrowUp, Filter } from "lucide-react";
 import { Reducer, useEffect, useReducer } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -72,6 +72,8 @@ export default function Browse() {
         };
       case "SET_PAGE":
         return { ...state, page: action.payload };
+      case "CLEAR_FILTERS":
+        return { ...state, filters: {}, conjunction: {} };
       default:
         throw new TypeError("Invalid action type");
     }
@@ -188,6 +190,18 @@ export default function Browse() {
 
       <div className="flex-1">
         <Search state={state} dispatch={dispatch} data={data} />
+      </div>
+      <div className="fixed bottom-8 right-8">
+        <Button
+          variant="outline"
+          size={"icon"}
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          title="Scroll to top"
+        >
+          <ArrowUp className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
