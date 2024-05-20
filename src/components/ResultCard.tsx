@@ -1,9 +1,6 @@
 import { Dataset } from "@/utils/types";
-import { PencilLine, Send, SquareArrowOutUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
 
 export function Property({
   property,
@@ -28,14 +25,13 @@ export function Property({
 
 export default function ResultCard({ dataset }: { dataset: Dataset }) {
   return (
-    <div className="p-4 border rounded-xl">
+    <Link
+      to={`/browse/${dataset.id}`}
+      className="p-4 border rounded-xl hover:bg-secondary/50"
+      title={`Open detail for ${dataset.name}`}
+    >
       <div className="flex justify-between items-start">
         <h3 className="font-semibold text-xl">{dataset.name}</h3>
-        <Link to={`/browse/${dataset.id}`} title="Open detail">
-          <Button size={"icon_sm"} variant={"outline"}>
-            <SquareArrowOutUpRight size={13} />
-          </Button>
-        </Link>
       </div>
       <div className="flex gap-x-4 gap-y-2 flex-wrap">
         <Property property={dataset.language} name="Languages" />
@@ -47,15 +43,12 @@ export default function ResultCard({ dataset }: { dataset: Dataset }) {
           <p className="text-sm">{dataset.document_type}</p>
         </div>
       </div>
-      <Separator className="my-4" />
+      {/* <Separator className="my-4" />
       <div className="flex gap-2 flex-wrap">
         <Button size={"sm"} variant={"outline"}>
           <PencilLine className="mr-2 h-4 w-4" /> Suggest an edit
         </Button>
-        <Button size={"sm"} variant={"outline"}>
-          <Send className="mr-2 h-4 w-4" /> Share
-        </Button>
-      </div>
-    </div>
+      </div> */}
+    </Link>
   );
 }
