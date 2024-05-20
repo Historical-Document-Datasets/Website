@@ -13,10 +13,7 @@ export default function Detail() {
     data = [],
     error,
     isLoading = true,
-  } = useSWRImmutable(
-    "https://raw.githubusercontent.com/Historical-Document-Datasets/Catalog/main/catalog.json",
-    fetcher
-  );
+  } = useSWRImmutable(import.meta.env.VITE_CATALOG_URL, fetcher);
 
   const { id } = useParams();
 
@@ -24,8 +21,6 @@ export default function Detail() {
   if (isLoading) return <Loader />;
 
   const dataset: Dataset = data.find((item: Dataset) => item.id === id);
-  console.log(dataset);
-
   if (dataset === undefined) {
     return (
       <div className="flex flex-col items-center justify-center h-full">

@@ -1,8 +1,13 @@
 import { Input } from "@/components/ui/input";
-import { Dataset, SearchResult } from "@/utils/types";
+import {
+  Dataset,
+  SearchAction,
+  SearchActionTypes,
+  SearchState,
+} from "@/utils/types";
 import ItemsJS from "itemsjs";
 import MiniSearch from "minisearch";
-import { SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import ResultCard from "./ResultCard";
 
 import {
@@ -16,25 +21,15 @@ import {
 import Pagination from "./Pagination";
 
 const Search = ({
-  results,
-  setResults,
-  filters,
-  conjunction,
-  page,
-  setPage,
+  state,
+  dispatch,
   data,
 }: {
-  results: SearchResult;
-  setResults: (value: object) => void;
-  filters: Record<string, string[]>;
-  conjunction: Record<string, boolean>;
-  page: number;
-  setPage: (value: SetStateAction<number>) => void;
+  state: SearchState;
+  dispatch: Dispatch<SearchAction>;
   data: Dataset[] | [];
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [perPage, setPerPage] = useState(20);
-  const [sort, setSort] = useState("");
+  const { query, sort, perPage, results, filters, conjunction, page } = state;
 
   useEffect(() => {
     const config = {
@@ -96,7 +91,7 @@ const Search = ({
     };
 
     // Search with MiniSearch
-    const search_results = search(searchQuery, {
+    const search_results = search(query, {
       prefix: true,
       fuzzy: 0.2,
     });
@@ -110,23 +105,17 @@ const Search = ({
       filters: filters,
     });
 
-    setResults(filteredResults);
-  }, [
-    searchQuery,
-    filters,
-    setResults,
-    conjunction,
-    page,
-    perPage,
-    sort,
-    data,
-  ]);
+    dispatch({ type: SearchActionTypes.SET_RESULTS, payload: filteredResults });
+  }, [query, filters, conjunction, page, perPage, sort, data, dispatch]);
 
   const handleSearchChange = (e: {
     target: { value: SetStateAction<string> };
   }) => {
-    setSearchQuery(e.target.value);
-    setPage(1);
+    dispatch({
+      type: SearchActionTypes.SET_QUERY,
+      payload: e.target.value as string,
+    });
+    dispatch({ type: SearchActionTypes.SET_PAGE, payload: 1 });
   };
 
   return (
@@ -136,8 +125,9 @@ const Search = ({
         <Input
           type="text"
           placeholder="Type anything to search..."
-          value={searchQuery}
+          value={query}
           onChange={handleSearchChange}
+          autoFocus
           className="h-10"
         />
         <div className="flex gap-4 justify-end items-center lg:shrink-0">
@@ -145,7 +135,10 @@ const Search = ({
           <Select
             defaultValue="none"
             onValueChange={(value) => {
-              setSort(value);
+              dispatch({
+                type: SearchActionTypes.SET_SORT,
+                payload: value as "name_asc" | "name_desc",
+              });
             }}
           >
             <SelectTrigger className="min-w-32">
@@ -161,10 +154,13 @@ const Search = ({
         <div className="flex gap-4 justify-end items-center lg:shrink-0">
           <span className="text-sm">Results per page</span>
           <Select
-            defaultValue="20"
+            defaultValue={perPage.toString() || "20"}
             onValueChange={(value) => {
-              setPerPage(parseInt(value));
-              setPage(1);
+              dispatch({
+                type: SearchActionTypes.SET_PER_PAGE,
+                payload: parseInt(value),
+              });
+              dispatch({ type: SearchActionTypes.SET_PAGE, payload: 1 });
             }}
           >
             <SelectTrigger className="w-24 shrink-0">
@@ -176,7 +172,7 @@ const Search = ({
               <SelectItem value="30">30</SelectItem>
               <SelectItem value="50">50</SelectItem>
               <SelectItem
-                value={results?.pagination?.total.toString() || "all"}
+                value={results?.pagination?.total?.toString() || "all"}
               >
                 <b>All ({results?.pagination?.total})</b>
               </SelectItem>
@@ -191,7 +187,9 @@ const Search = ({
         </p>
         <Pagination
           page={page}
-          setPage={setPage}
+          setPage={(value) => {
+            dispatch({ type: SearchActionTypes.SET_PAGE, payload: value });
+          }}
           total={results?.pagination?.total}
           perPage={perPage}
         />
@@ -208,7 +206,9 @@ const Search = ({
           <div className="pt-4 flex justify-center">
             <Pagination
               page={page}
-              setPage={setPage}
+              setPage={(value) => {
+                dispatch({ type: SearchActionTypes.SET_PAGE, payload: value });
+              }}
               total={results?.pagination?.total}
               perPage={perPage}
             />

@@ -15,8 +15,13 @@ import {
 import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { Aggregation } from "@/utils/types";
-import { useState } from "react";
+import {
+  Aggregation,
+  SearchAction,
+  SearchActionTypes,
+  SearchState,
+} from "@/utils/types";
+import { Dispatch, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
@@ -30,42 +35,46 @@ import {
 
 export function FilterBox({
   aggregation,
-  filters,
-  setFilters,
-  conjunction,
-  setConjunction,
-  setPage,
+  state,
+  dispatch,
 }: {
   aggregation: Aggregation;
-  filters: Record<string, string[]>;
-  setFilters: React.Dispatch<React.SetStateAction<Record<string, string[]>>>;
-  conjunction: Record<string, boolean>;
-  setConjunction: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  state: SearchState;
+  dispatch: Dispatch<SearchAction>;
 }) {
   const [open, setOpen] = useState(false);
   const buckets = aggregation.buckets;
+  const { filters, conjunction } = state;
+
   const selectedItems = filters[aggregation.name] || [];
 
   const removeItem = (bucket_key: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [aggregation.name]: (prevFilters[aggregation.name] || []).filter(
-        (value) => value !== bucket_key
-      ),
-    }));
+    dispatch({
+      type: SearchActionTypes.SET_FILTERS,
+      payload: {
+        [aggregation.name]: (filters[aggregation.name] || []).filter(
+          (value) => value !== bucket_key
+        ),
+      },
+    });
   };
 
   const handleSelect = (checked: string | boolean, bucket_key: string) => {
-    setPage(1);
+    dispatch({
+      type: SearchActionTypes.SET_PAGE,
+      payload: 1,
+    });
+
     if (checked) {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [aggregation.name]: [
-          ...(prevFilters[aggregation.name] || []),
-          bucket_key,
-        ],
-      }));
+      dispatch({
+        type: SearchActionTypes.SET_FILTERS,
+        payload: {
+          [aggregation.name]: [
+            ...(filters[aggregation.name] || []),
+            bucket_key,
+          ],
+        },
+      });
     } else {
       removeItem(bucket_key);
     }
@@ -73,7 +82,7 @@ export function FilterBox({
 
   return (
     <div>
-      <div className="flex justify-between pb-1 pr-6">
+      <div className="flex justify-between pb-1">
         <h3 className="font-lg font-medium">{aggregation.title}</h3>
         <div className="flex items-center space-x-1">
           <Switch
@@ -81,10 +90,12 @@ export function FilterBox({
             disabled={selectedItems.length !== 0}
             checked={conjunction[aggregation.name] || false}
             onCheckedChange={(checked) => {
-              setConjunction((prevConjunction) => ({
-                ...prevConjunction,
-                [aggregation.name]: checked,
-              }));
+              dispatch({
+                type: SearchActionTypes.SET_CONJUNCTION,
+                payload: {
+                  [aggregation.name]: checked,
+                },
+              });
             }}
           />
           <Label
@@ -109,67 +120,63 @@ export function FilterBox({
         </div>
       </div>
 
-      <div className="pr-6">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
-              <div className="flex flex-wrap gap-1">
-                {selectedItems.length > 0 ? (
-                  <>
-                    {selectedItems.map((key) => (
-                      <Badge
-                        variant={"outline"}
-                        className="font-medium"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          removeItem(key);
-                        }}
-                        key={key}
-                      >
-                        <span className="pr-1">{key}</span> ×
-                      </Badge>
-                    ))}
-                  </>
-                ) : (
-                  <p className="pl-1">
-                    Select {aggregation.title.toLowerCase()}
-                  </p>
-                )}
-              </div>
-              {open ? (
-                <ChevronUp className="h-4" />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <div className="w-full px-2 py-2 rounded-md border cursor-pointer flex justify-between items-center">
+            <div className="flex flex-wrap gap-1">
+              {selectedItems.length > 0 ? (
+                <>
+                  {selectedItems.map((key) => (
+                    <Badge
+                      variant={"outline"}
+                      className="font-medium"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        removeItem(key);
+                      }}
+                      key={key}
+                    >
+                      <span className="pr-1">{key}</span> ×
+                    </Badge>
+                  ))}
+                </>
               ) : (
-                <ChevronDown className="h-4" />
+                <p className="pl-1">Select {aggregation.title.toLowerCase()}</p>
               )}
             </div>
-          </PopoverTrigger>
-          <PopoverContent className="p-0 w-58" side="right" align="start">
-            <Command>
-              <CommandInput placeholder="Search languages..." />
-              <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup>
-                  {buckets.map((bucket) => (
-                    <CommandItem key={bucket.key} value={bucket.key}>
-                      <Checkbox
-                        id={bucket.key}
-                        checked={selectedItems.includes(bucket.key)}
-                        onCheckedChange={(checked) =>
-                          handleSelect(checked, bucket.key)
-                        }
-                        className="mr-2"
-                      />
-                      <label htmlFor={bucket.key} className="cursor-pointer">
-                        {bucket.key} ({bucket.doc_count})
-                      </label>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+            {open ? (
+              <ChevronUp className="h-4" />
+            ) : (
+              <ChevronDown className="h-4" />
+            )}
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="p-0 w-58" side="right" align="start">
+          <Command>
+            <CommandInput placeholder="Search languages..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                {buckets.map((bucket) => (
+                  <CommandItem key={bucket.key} value={bucket.key}>
+                    <Checkbox
+                      id={bucket.key}
+                      checked={selectedItems.includes(bucket.key)}
+                      onCheckedChange={(checked) =>
+                        handleSelect(checked, bucket.key)
+                      }
+                      className="mr-2"
+                    />
+                    <label htmlFor={bucket.key} className="cursor-pointer">
+                      {bucket.key} ({bucket.doc_count})
+                    </label>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
