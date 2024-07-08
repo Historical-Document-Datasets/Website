@@ -73,10 +73,22 @@ export default function Detail() {
         <div className="border rounded-lg p-4">
           <h2 className="text-xl font-bold mb-2">Tags</h2>
           <div className="flex gap-2 flex-col">
-            <Property property={dataset.language} name="Languages" />
-            <Property property={dataset.task} name="Tasks" />
-            <Property property={dataset.format} name="Image formats" />
-            <Property property={dataset.mode} name="Color modes" />
+            <Property
+              property={dataset.language}
+              name="Languages"
+              color="blue"
+            />
+            <Property property={dataset.task} name="Tasks" color="red" />
+            <Property
+              property={dataset.format}
+              name="Image formats"
+              color="green"
+            />
+            <Property
+              property={dataset.mode}
+              name="Color modes"
+              color="yellow"
+            />
           </div>
         </div>
       </div>

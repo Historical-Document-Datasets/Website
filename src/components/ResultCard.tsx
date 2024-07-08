@@ -5,16 +5,18 @@ import { Badge } from "./ui/badge";
 export function Property({
   property,
   name,
+  color,
 }: {
   property: string[];
   name: string;
+  color: "blue" | "green" | "red" | "yellow";
 }) {
   return (
     <div>
       <h4 className="pb-1 font-medium">{name}</h4>
       <div className="flex flex-wrap gap-1">
         {property.map((property) => (
-          <Badge key={property} variant={"outline"}>
+          <Badge key={property} variant={color}>
             {property}
           </Badge>
         ))}
@@ -34,10 +36,14 @@ export default function ResultCard({ dataset }: { dataset: Dataset }) {
         <h3 className="font-semibold text-xl">{dataset.name}</h3>
       </div>
       <div className="flex gap-x-4 gap-y-2 flex-wrap">
-        <Property property={dataset.language} name="Languages" />
-        <Property property={dataset.task} name="Tasks" />
-        <Property property={dataset.format} name="Image formats" />
-        <Property property={dataset.mode} name="Color modes" />
+        <Property property={dataset.language} name="Languages" color="blue" />
+        <Property property={dataset.task} name="Tasks" color="red" />
+        <Property
+          property={dataset.format}
+          name="Image formats"
+          color="green"
+        />
+        <Property property={dataset.mode} name="Color modes" color="yellow" />
         <div>
           <h4 className="font-medium">Document Type</h4>
           <p className="text-sm">{dataset.document_type}</p>
