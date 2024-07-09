@@ -28,9 +28,9 @@ export default function Home() {
             >
               HTR-United
             </a>
-            , we strive to offer the most comprehensive and up-to-date
-            repository of data for academic and professional use in document
-            recognition and digital humanities.
+            , we aim to offer the most comprehensive and up-to-date repository
+            of data for academic and professional use in document recognition
+            and digital humanities.
           </p>
         </div>
       </header>
@@ -56,7 +56,7 @@ export default function Home() {
         </p>
       </section>
 
-      <footer className="mt-10">
+      <footer className="my-10">
         <h2 className="text-2xl font-semibold">Acknowledgements</h2>
         <p className="mt-4">
           This site was developed by Tristan Kermorvant using data provided by

@@ -1,38 +1,83 @@
-import { useTheme } from "@/ThemeProvider";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { SquarePen, Sun } from "lucide-react";
+import { useMediaQuery } from "@/utils/hooks";
+import { SquarePen } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+
+const NavIcon = () => {
+  return (
+    <svg
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="h-5 w-5 mr-2"
+    >
+      <path
+        d="M3 5H11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></path>
+      <path
+        d="M3 12H16"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></path>
+      <path
+        d="M3 19H21"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      ></path>
+    </svg>
+  );
+};
+
+const NavLinks = () => {
+  return (
+    <nav className="flex items-center gap-6 text-sm">
+      <Link
+        to={"browse"}
+        className="hover:text-foreground/80 text-foreground/60"
+      >
+        Browse
+      </Link>
+      <a
+        href=""
+        className="hover:text-foreground/80 text-foreground/60 flex gap-1 items-center"
+      >
+        <SquarePen size={16} className="" />
+        Add data
+      </a>
+    </nav>
+  );
+};
 
 export default function Navbar() {
-  const { setTheme } = useTheme();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
   return (
     <header className="w-full border-b border-border/40 bg-background/95">
       <div className="container flex h-16 max-w-screen-2xl items-center">
-        <div className="mr-4 hidden md:flex">
+        <div className="mr-4 flex">
+          {!isDesktop && (
+            <Sheet>
+              <SheetTrigger>
+                <NavIcon />
+              </SheetTrigger>
+              <SheetContent side={"top"}>
+                <NavLinks />
+              </SheetContent>
+            </Sheet>
+          )}
           <Link to={"/"} className="mr-6">
             Historical Document Datasets
           </Link>
-          <nav className="flex items-center gap-6 text-sm">
-            <Link
-              to={"browse"}
-              className="hover:text-foreground/80 text-foreground/60"
-            >
-              Browse
-            </Link>
-            <a
-              href=""
-              className="hover:text-foreground/80 text-foreground/60 flex gap-1 items-center"
-            >
-              <SquarePen size={16} className="" />
-              Add data
-            </a>
-          </nav>
+          {isDesktop && <NavLinks />}
         </div>
         <div className="flex flex-1 items-center gap-1 justify-end">
           <a
@@ -49,25 +94,6 @@ export default function Navbar() {
               <span className="sr-only">GitHub</span>
             </div>
           </a>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <div className="inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground h-9 py-2 w-9">
-                <Sun size={20} strokeWidth={1.5} />
-                <span className="sr-only">Change theme</span>
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </header>
