@@ -20,7 +20,7 @@ export default function Pagination({
   return (
     <div className="flex gap-8">
       {total ?? 0 > 0 ? (
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className="flex items-center justify-center text-sm font-medium">
           Page {page} of {Math.ceil((total ?? 0) / perPage)}
         </div>
       ) : null}

@@ -6,9 +6,8 @@ import { Error, Loader } from "@/components/Loaders";
 import Search from "@/components/Search";
 import Sidebar from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { fetcher } from "@/utils/helpers";
-import { ArrowUp, Filter } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { Reducer, useEffect, useReducer } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -177,16 +176,6 @@ export default function Browse() {
   return (
     <div className="flex h-full">
       <Sidebar mobile={false} state={state} dispatch={dispatch} />
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button className="mr-4 mt-6 md:hidden" variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side={"left"}>
-          <Sidebar mobile={true} state={state} dispatch={dispatch} />
-        </SheetContent>
-      </Sheet>
 
       <div className="flex-1">
         <Search state={state} dispatch={dispatch} data={data} />
