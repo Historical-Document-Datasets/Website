@@ -18,7 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { Filter } from "lucide-react";
 import Pagination from "./Pagination";
+import Sidebar from "./Sidebar";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const Search = ({
   state,
@@ -120,7 +124,20 @@ const Search = ({
 
   return (
     <div className="py-6 gap-8">
-      <h1 className="text-3xl">Browse datasets</h1>
+      <div className="flex">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button className="mr-4 md:hidden" variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={"left"}>
+            <Sidebar mobile={true} state={state} dispatch={dispatch} />
+          </SheetContent>
+        </Sheet>
+        <h1 className="text-3xl">Browse datasets</h1>
+      </div>
+
       <div className="py-2 flex gap-x-4 gap-y-2 flex-wrap lg:flex-nowrap">
         <Input
           type="text"
@@ -180,7 +197,7 @@ const Search = ({
           </Select>
         </div>
       </div>
-      <div className="flex justify-between items-center pb-2">
+      <div className="flex justify-between items-center pb-2 flex-wrap gap-2">
         <p className="text-foreground/60 text-sm shrink-0">
           {results?.pagination?.total} results found in {results.timings?.total}
           ms &mdash; Showing {results?.data?.items.length} results
