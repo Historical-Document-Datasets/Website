@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetcher, textFetcher } from "@/utils/helpers";
-import { Clipboard, Undo2 } from "lucide-react";
+import { Check, Clipboard, Undo2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
 
@@ -17,6 +17,8 @@ export default function Detail() {
   const { name } = useParams();
   const [bibCitation, setBibCitation] = useState<string | null>();
   const [apaCitation, setApaCitation] = useState<string | null>();
+
+  const [isCopied, setIsCopied] = useState(false);
 
   const {
     data = [],
@@ -50,8 +52,6 @@ export default function Detail() {
       });
     }
   }, [bibData]);
-
-  console.log(apaCitation);
 
   if (isLoading) return <Loader />;
 
@@ -119,9 +119,17 @@ export default function Detail() {
                     title="Copy to clipboard"
                     onClick={() => {
                       navigator.clipboard.writeText(bibCitation);
+                      setIsCopied(true);
+                      setTimeout(() => {
+                        setIsCopied(false);
+                      }, 2000);
                     }}
                   >
-                    <Clipboard strokeWidth={2} className="h-4 w-4" />
+                    {isCopied ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Clipboard className="h-4 w-4" />
+                    )}
                   </Button>
                   <span className="whitespace-pre-wrap </div>font-mono text-sm">
                     {bibCitation.split("\n").map((line, i, arr) => (
