@@ -1,17 +1,18 @@
+import LatexRenderer from "@/components/LatexRenderer";
 import { Error, Loader } from "@/components/Loaders";
 import { Property } from "@/components/ResultCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetcher, textFetcher } from "@/utils/helpers";
-import { Check, Clipboard, Undo2 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
-import useSWRImmutable from "swr/immutable";
-
+import { Dataset } from "@/utils/types";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-csl";
+import { Check, Clipboard, Undo2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import useSWRImmutable from "swr/immutable";
 
 export default function Detail() {
   const { name } = useParams();
@@ -22,7 +23,7 @@ export default function Detail() {
   const [isCopied, setIsCopied] = useState(false);
 
   const {
-    data = [],
+    data = {} as Dataset,
     error,
     isLoading = true,
   } = useSWRImmutable(
@@ -102,21 +103,34 @@ export default function Detail() {
         <div className="flex gap-4 flex-wrap">
           <div className="border rounded-xl p-4 w-full md:w-auto">
             <h4 className="font-medium">Stats:</h4>
-            <span className="text-gray-600">{data.statistics}</span>
+            <LatexRenderer latex={data.statistics} className="text-gray-600" />
           </div>
           <div className="border rounded-xl p-4 w-full md:w-auto">
             <h4 className="font-medium">Class:</h4>
-            <span className="text-gray-600">{data.class}</span>
+            <LatexRenderer latex={data.class} className="text-gray-600" />
           </div>
           <div className="border rounded-xl p-4 w-full md:w-auto">
             <h4 className="font-medium">Document type:</h4>
-            <span className="text-gray-600">{data.document_type}</span>
+            <LatexRenderer
+              latex={data.document_type}
+              className="text-gray-600"
+            />
           </div>
         </div>
         <Separator className="my-4" />
         <div>
           <h3 className="text-lg font-medium">Description</h3>
-          <p className="text-gray-600">{data.description}</p>
+          <p className="text-gray-600">
+            {data.description
+              .split("\n")
+              .filter((line: string) => line.trim() !== "")
+              .map((line: string, i: number) => (
+                <React.Fragment key={i}>
+                  <LatexRenderer latex={line} />
+                  <br />
+                </React.Fragment>
+              ))}
+          </p>
         </div>
         <Separator className="my-4" />
         <div>
