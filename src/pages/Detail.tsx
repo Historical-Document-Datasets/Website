@@ -91,6 +91,14 @@ export default function Detail() {
 
   if (error) return <Error />;
 
+  const properties = [
+    [data.statistics, "Statistics"],
+    [data.class, "Class"],
+    [data.document_type, "Document type"],
+    [data.resolution, "Resolution"],
+    [data.reference, "Reference"],
+  ];
+
   return (
     <div className="flex flex-wrap gap-6 justify-between pt-5">
       <div className="flex-1 mb-4">
@@ -103,22 +111,13 @@ export default function Detail() {
           <h1 className="text-3xl font-bold mb-3">{data.name}</h1>
         </div>
 
-        <div className="flex gap-4 flex-wrap">
-          <div className="border rounded-xl p-4 w-full md:w-auto">
-            <h4 className="font-medium">Stats:</h4>
-            <LatexRenderer latex={data.statistics} className="text-gray-600" />
-          </div>
-          <div className="border rounded-xl p-4 w-full md:w-auto">
-            <h4 className="font-medium">Class:</h4>
-            <LatexRenderer latex={data.class} className="text-gray-600" />
-          </div>
-          <div className="border rounded-xl p-4 w-full md:w-auto">
-            <h4 className="font-medium">Document type:</h4>
-            <LatexRenderer
-              latex={data.document_type}
-              className="text-gray-600"
-            />
-          </div>
+        <div className="flex gap-2 flex-wrap">
+          {properties.map(([value, name]) => (
+            <div className="border rounded-lg p-3 md:w-auto">
+              <h4 className="font-medium">{name}</h4>
+              <p className="text-gray-600">{value}</p>
+            </div>
+          ))}
         </div>
         <Separator className="my-4" />
         <div>
@@ -185,7 +184,7 @@ export default function Detail() {
             <p className="text-gray-600">No reference found</p>
           )}
         </div>
-        <h4 className="text-lg font-medium mt-4">All references</h4>
+        <h4 className="text-lg font-medium mt-4 mb-2">All references</h4>
         <ol className="grid grid-cols-2 gap-2 list-decimal">
           {bibEntries?.map((ref, i) => (
             <li
