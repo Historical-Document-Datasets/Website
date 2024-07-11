@@ -2,18 +2,21 @@ import { Error, Loader } from "@/components/Loaders";
 import { Property } from "@/components/ResultCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetcher, textFetcher } from "@/utils/helpers";
-import { Undo2 } from "lucide-react";
+import { Clipboard, Undo2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
 
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
+import "@citation-js/plugin-csl";
 import React, { useEffect, useState } from "react";
 
 export default function Detail() {
   const { name } = useParams();
   const [bibCitation, setBibCitation] = useState<string | null>();
+  const [apaCitation, setApaCitation] = useState<string | null>();
 
   const {
     data = [],
@@ -31,13 +34,24 @@ export default function Detail() {
 
   useEffect(() => {
     if (bibData == "No reference found") {
-      return setBibCitation(null);
+      setBibCitation(null);
+      setApaCitation(null);
+      return;
     } else {
-      Cite.async(bibData).then((data: { format: (arg0: string) => string }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Cite.async(bibData).then((data: any) => {   // FIXME
         setBibCitation(data.format("bibtex").replace(/\n$/, ""));
+        setApaCitation(
+          data.format("bibliography", {
+            template: "apa",
+            lang: "en-US",
+          })
+        );
       });
     }
   }, [bibData]);
+
+  console.log(apaCitation);
 
   if (isLoading) return <Loader />;
 
@@ -89,17 +103,38 @@ export default function Detail() {
         <Separator className="my-4" />
         <div>
           <h4 className="text-lg font-medium">Bibliography</h4>
-          {bibCitation ? (
-            <div className="bg-[#ddd] p-2 rounded-md">
-              <span className="whitespace-pre-wrap font-mono text-sm">
-                {bibCitation.split("\n").map((line, i, arr) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    {i < arr.length - 1 && <br />}
-                  </React.Fragment>
-                ))}
-              </span>
-            </div>
+
+          {bibCitation && apaCitation ? (
+            <Tabs defaultValue="account">
+              <TabsList className="mt-2 grid w-full grid-cols-2">
+                <TabsTrigger value="bibtex">BibTeX</TabsTrigger>
+                <TabsTrigger value="apa">APA</TabsTrigger>
+              </TabsList>
+              <TabsContent value="bibtex">
+                <div className="bg-[#ddd] p-2 rounded-md relative">
+                  <Button
+                    className="absolute right-2 top-2"
+                    variant={"outline"}
+                    size={"icon_sm"}
+                    title="Copy to clipboard"
+                    onClick={() => {
+                      navigator.clipboard.writeText(bibCitation);
+                    }}
+                  >
+                    <Clipboard strokeWidth={2} className="h-4 w-4" />
+                  </Button>
+                  <span className="whitespace-pre-wrap </div>font-mono text-sm">
+                    {bibCitation.split("\n").map((line, i, arr) => (
+                      <React.Fragment key={i}>
+                        {line}
+                        {i < arr.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </span>
+                </div>
+              </TabsContent>
+              <TabsContent value="apa">{apaCitation}</TabsContent>
+            </Tabs>
           ) : (
             <p className="text-gray-600">No reference found</p>
           )}
