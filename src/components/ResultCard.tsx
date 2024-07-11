@@ -28,7 +28,7 @@ export function Property({
 export default function ResultCard({ dataset }: { dataset: Dataset }) {
   return (
     <Link
-      to={`/browse/${dataset.id}`}
+      to={`/browse/${dataset.name.replace(" ", "_")}`}
       className="p-4 border rounded-xl hover:bg-secondary/50"
       title={`Open detail for ${dataset.name}`}
     >
