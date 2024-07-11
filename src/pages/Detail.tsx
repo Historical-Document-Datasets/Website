@@ -2,13 +2,18 @@ import { Error, Loader } from "@/components/Loaders";
 import { Property } from "@/components/ResultCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { fetcher } from "@/utils/helpers";
+import { fetcher, textFetcher } from "@/utils/helpers";
 import { Undo2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
 
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-bibtex";
+import React, { useEffect, useState } from "react";
+
 export default function Detail() {
   const { name } = useParams();
+  const [bibCitation, setBibCitation] = useState<string | null>();
 
   const {
     data = [],
@@ -18,6 +23,21 @@ export default function Detail() {
     import.meta.env.VITE_CATALOG_URL + `/detail/${name}`,
     fetcher
   );
+
+  const { data: bibData } = useSWRImmutable(
+    import.meta.env.VITE_CATALOG_URL + `/detail/${name}/bib`,
+    textFetcher
+  );
+
+  useEffect(() => {
+    if (bibData == "No reference found") {
+      return setBibCitation(null);
+    } else {
+      Cite.async(bibData).then((data: { format: (arg0: string) => string }) => {
+        setBibCitation(data.format("bibtex").replace(/\n$/, ""));
+      });
+    }
+  }, [bibData]);
 
   if (isLoading) return <Loader />;
 
@@ -53,10 +73,6 @@ export default function Detail() {
             <span className="text-gray-600">{data.statistics}</span>
           </div>
           <div className="border rounded-xl p-4 w-full md:w-auto">
-            <h4 className="font-medium">Reference:</h4>
-            <span className="text-gray-600">{data.reference}</span>
-          </div>
-          <div className="border rounded-xl p-4 w-full md:w-auto">
             <h4 className="font-medium">Class:</h4>
             <span className="text-gray-600">{data.class}</span>
           </div>
@@ -69,6 +85,24 @@ export default function Detail() {
         <div>
           <h3 className="text-lg font-medium">Description</h3>
           <p className="text-gray-600">{data.description}</p>
+        </div>
+        <Separator className="my-4" />
+        <div>
+          <h4 className="text-lg font-medium">Bibliography</h4>
+          {bibCitation ? (
+            <div className="bg-[#ddd] p-2 rounded-md">
+              <span className="whitespace-pre-wrap font-mono text-sm">
+                {bibCitation.split("\n").map((line, i, arr) => (
+                  <React.Fragment key={i}>
+                    {line}
+                    {i < arr.length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </span>
+            </div>
+          ) : (
+            <p className="text-gray-600">No reference found</p>
+          )}
         </div>
       </div>
       <div className="w-full sm:w-1/3 xl:w-1/4">
