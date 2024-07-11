@@ -19,3 +19,16 @@ export const fetcher = async (url: string) => {
 
   return res.json();
 };
+
+export const textFetcher = async (url: string) => {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new FetchError(
+      "An error occurred while fetching the data.",
+      res.status
+    );
+  }
+
+  return res.text();
+};
