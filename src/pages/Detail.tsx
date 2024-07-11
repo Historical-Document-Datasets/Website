@@ -19,6 +19,8 @@ export default function Detail() {
   const [bibCitation, setBibCitation] = useState<string | undefined>();
   const [apaCitation, setApaCitation] = useState<string | undefined>();
   const [apaLink, setApaLink] = useState<string | undefined>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [bibEntries, setBibEntries] = useState<any[] | undefined>();
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -46,6 +48,7 @@ export default function Detail() {
         // FIXME: any
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (entries: any) => {
+          setBibEntries(entries.data);
           const entryData = entries.data.find(
             (entry: { [key: string]: string }) =>
               entry["citation-key"] === data.reference
@@ -90,7 +93,7 @@ export default function Detail() {
 
   return (
     <div className="flex flex-wrap gap-6 justify-between pt-5">
-      <div className="flex-1">
+      <div className="flex-1 mb-4">
         <div className="flex gap-4 items-start">
           <Link to="/browse">
             <Button variant="outline" size={"icon"} className="rounded-full">
@@ -119,17 +122,9 @@ export default function Detail() {
         </div>
         <Separator className="my-4" />
         <div>
-          <h3 className="text-lg font-medium">Description</h3>
-          <p className="text-gray-600">
-            {data.description
-              .split("\n")
-              .filter((line: string) => line.trim() !== "")
-              .map((line: string, i: number) => (
-                <React.Fragment key={i}>
-                  <LatexRenderer latex={line} />
-                  <br />
-                </React.Fragment>
-              ))}
+          <h3 className="text-lg font-medium mb-2">Description</h3>
+          <p className="text-gray-600 text-justify">
+            <LatexRenderer latex={data.description} />
           </p>
         </div>
         <Separator className="my-4" />
@@ -190,6 +185,21 @@ export default function Detail() {
             <p className="text-gray-600">No reference found</p>
           )}
         </div>
+        <h4 className="text-lg font-medium mt-4">All references</h4>
+        <ol className="grid grid-cols-2 gap-2 list-decimal">
+          {bibEntries?.map((ref, i) => (
+            <li
+              key={i}
+              id={(i + 1).toString()}
+              className="p-2 rounded-md font-mono text-xs"
+            >
+              {new Cite(ref).format("bibliography", {
+                template: "apa",
+                lang: "en-US",
+              })}
+            </li>
+          ))}
+        </ol>
       </div>
       <div className="w-full sm:w-1/3 xl:w-1/4">
         <div className="border rounded-lg p-4">
