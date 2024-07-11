@@ -15,8 +15,9 @@ import React, { useEffect, useState } from "react";
 
 export default function Detail() {
   const { name } = useParams();
-  const [bibCitation, setBibCitation] = useState<string | null>();
-  const [apaCitation, setApaCitation] = useState<string | null>();
+  const [bibCitation, setBibCitation] = useState<string | undefined>();
+  const [apaCitation, setApaCitation] = useState<string | undefined>();
+  const [apaLink, setApaLink] = useState<string | undefined>();
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -36,8 +37,8 @@ export default function Detail() {
 
   useEffect(() => {
     if (bibData == "No reference found") {
-      setBibCitation(null);
-      setApaCitation(null);
+      setBibCitation(undefined);
+      setApaCitation(undefined);
       return;
     } else {
       Cite.async(bibData).then(
@@ -53,12 +54,17 @@ export default function Detail() {
             const entry = new Cite(entryData);
 
             setBibCitation(entry.format("bibtex").replace(/\n$/, ""));
-            setApaCitation(
-              entry.format("bibliography", {
-                template: "apa",
-                lang: "en-US",
-              })
-            );
+
+            const formatted = entry.format("bibliography", {
+              template: "apa",
+              lang: "en-US",
+            });
+
+            const apaLinkRegex = /(https?:\/\/[^\s]+)/g;
+            const apaLinkMatch = apaLinkRegex.exec(formatted);
+
+            setApaCitation(formatted.replace(apaLinkRegex, ""));
+            setApaLink(apaLinkMatch ? apaLinkMatch[1] : undefined);
           }
         }
       );
@@ -153,7 +159,18 @@ export default function Detail() {
                   </span>
                 </div>
               </TabsContent>
-              <TabsContent value="apa">{apaCitation}</TabsContent>
+              <TabsContent value="apa">
+                <p>
+                  {apaCitation}
+                  <a
+                    href={apaLink}
+                    target="_blank"
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    {apaLink}
+                  </a>
+                </p>
+              </TabsContent>
             </Tabs>
           ) : (
             <p className="text-gray-600">No reference found</p>
