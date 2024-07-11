@@ -40,18 +40,30 @@ export default function Detail() {
       setApaCitation(null);
       return;
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Cite.async(bibData).then((data: any) => {   // FIXME
-        setBibCitation(data.format("bibtex").replace(/\n$/, ""));
-        setApaCitation(
-          data.format("bibliography", {
-            template: "apa",
-            lang: "en-US",
-          })
-        );
-      });
+      Cite.async(bibData).then(
+        // FIXME: any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (entries: any) => {
+          const entryData = entries.data.find(
+            (entry: { [key: string]: string }) =>
+              entry["citation-key"] === data.reference
+          );
+
+          if (entryData) {
+            const entry = new Cite(entryData);
+
+            setBibCitation(entry.format("bibtex").replace(/\n$/, ""));
+            setApaCitation(
+              entry.format("bibliography", {
+                template: "apa",
+                lang: "en-US",
+              })
+            );
+          }
+        }
+      );
     }
-  }, [bibData]);
+  }, [bibData, data.reference]);
 
   if (isLoading) return <Loader />;
 
@@ -105,7 +117,7 @@ export default function Detail() {
           <h4 className="text-lg font-medium">Bibliography</h4>
 
           {bibCitation && apaCitation ? (
-            <Tabs defaultValue="account">
+            <Tabs defaultValue="bibtex">
               <TabsList className="mt-2 grid w-full grid-cols-2">
                 <TabsTrigger value="bibtex">BibTeX</TabsTrigger>
                 <TabsTrigger value="apa">APA</TabsTrigger>
