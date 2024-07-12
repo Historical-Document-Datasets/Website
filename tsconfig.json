@@ -11,6 +11,8 @@
       "@/*": ["./src/*"]
     },
 
+    "typeRoots": ["./node_modules/@types", "./src/utils/"],
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -25,6 +27,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "citation-js.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
