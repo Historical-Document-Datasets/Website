@@ -1,3 +1,4 @@
+import CopyToClipboard from "@/components/CopyToClipboard";
 import LatexRenderer from "@/components/LatexRenderer";
 import { Error, Loader } from "@/components/Loaders";
 import { Property } from "@/components/ResultCard";
@@ -9,7 +10,7 @@ import { Dataset } from "@/utils/types";
 import { Cite } from "@citation-js/core";
 import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-csl";
-import { Check, Clipboard, Undo2 } from "lucide-react";
+import { Undo2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useSWRImmutable from "swr/immutable";
@@ -21,8 +22,6 @@ export default function Detail() {
   const [apaLink, setApaLink] = useState<string | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bibEntries, setBibEntries] = useState<any[] | undefined>();
-
-  const [isCopied, setIsCopied] = useState(false);
 
   const {
     data = {} as Dataset,
@@ -129,7 +128,6 @@ export default function Detail() {
         <Separator className="my-4" />
         <div>
           <h4 className="text-lg font-medium">Bibliography</h4>
-
           {bibCitation && apaCitation ? (
             <Tabs defaultValue="bibtex">
               <TabsList className="mt-2 grid w-full grid-cols-2">
@@ -138,25 +136,7 @@ export default function Detail() {
               </TabsList>
               <TabsContent value="bibtex">
                 <div className="bg-[#ddd] p-2 rounded-md relative">
-                  <Button
-                    className="absolute right-2 top-2"
-                    variant={"outline"}
-                    size={"icon_sm"}
-                    title="Copy to clipboard"
-                    onClick={() => {
-                      navigator.clipboard.writeText(bibCitation);
-                      setIsCopied(true);
-                      setTimeout(() => {
-                        setIsCopied(false);
-                      }, 2000);
-                    }}
-                  >
-                    {isCopied ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Clipboard className="h-4 w-4" />
-                    )}
-                  </Button>
+                  <CopyToClipboard text={bibCitation} />
                   <span className="whitespace-pre-wrap </div>font-mono text-sm">
                     {bibCitation.split("\n").map((line, i, arr) => (
                       <React.Fragment key={i}>
