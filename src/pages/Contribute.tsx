@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Control, useForm } from "react-hook-form";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { stringify } from "yaml";
 import { z } from "zod";
 
+import CopyToClipboard from "@/components/CopyToClipboard";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const FormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -52,6 +56,8 @@ const TextInput = ({
 };
 
 function InputForm() {
+  const [output, setOutput] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -60,22 +66,42 @@ function InputForm() {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    setOutput(stringify(data));
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <TextInput
-          control={form.control}
-          name="name"
-          label="Name"
-          placeholder="HTR Benchmarks"
-          description="The name of the dataset you are contributing."
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-2/3 space-y-6"
+        >
+          <TextInput
+            control={form.control}
+            name="name"
+            label="Name"
+            placeholder="HTR Benchmarks"
+            description="The name of the dataset you are adding."
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+      {output && (
+        <div>
+          <h2 className="text-xl font-medium mt-4 mb-2">Formatted output</h2>
+          <div className="relative">
+            <CopyToClipboard text={output} />
+            <SyntaxHighlighter
+              language="yaml"
+              showLineNumber={true}
+              className="border rounded-md z-10"
+            >
+              {output}
+            </SyntaxHighlighter>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -7,7 +7,7 @@ export default function CopyToClipboard({ text }: { text: string }) {
 
   return (
     <Button
-      className="absolute right-2 top-2"
+      className="absolute right-2 top-2 z-0"
       variant={"outline"}
       size={"icon_sm"}
       title="Copy to clipboard"
