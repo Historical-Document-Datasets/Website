@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -56,11 +55,16 @@ export function FancyMultiSelect({
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
     >
-      <div className="group flex rounded-md border border-input px-3 py-1 min-h-9 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-        <div className="flex flex-wrap gap-1">
+      <div className="group flex rounded-md border border-input px-3 py-1 min-h-9 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring">
+        <div className="flex flex-wrap gap-1 flex-1">
           {selected.map((value) => {
             return (
-              <Badge key={value} variant="secondary">
+              <Badge
+                key={value}
+                variant="secondary"
+                onClick={() => handleUnselect(value)}
+                className="cursor-pointer"
+              >
                 {value}
                 <button
                   className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -73,14 +77,12 @@ export function FancyMultiSelect({
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  onClick={() => handleUnselect(value)}
                 >
-                  <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                  ×
                 </button>
               </Badge>
             );
           })}
-          {/* Avoid having the "Search" Icon */}
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}

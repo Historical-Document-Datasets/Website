@@ -42,19 +42,21 @@ function InputForm() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
-          <SelectInput
-            control={form.control}
-            name="languages"
-            label="Languages"
-            placeholder="French, Latin, Arabic..."
-            options={data["language"].sort()}
-          />
-          <TextInput
-            control={form.control}
-            name="name"
-            label="Name"
-            placeholder="HTR Benchmarks"
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <TextInput
+              control={form.control}
+              name="name"
+              label="Name"
+              placeholder="HTR Benchmarks"
+            />
+            <SelectInput
+              control={form.control}
+              name="languages"
+              label="Languages"
+              placeholder="French, Latin, Arabic..."
+              options={data["language"].sort()}
+            />
+          </div>
           <Button type="submit">Submit</Button>
         </form>
       </Form>
