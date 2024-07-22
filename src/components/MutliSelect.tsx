@@ -8,9 +8,16 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 
-export function FancyMultiSelect({ values }: { values: string[] }) {
+export function FancyMultiSelect({
+  values,
+  placeholder,
+}: {
+  values: string[];
+  placeholder: string;
+}) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<string[]>([]);
@@ -49,7 +56,7 @@ export function FancyMultiSelect({ values }: { values: string[] }) {
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
     >
-      <div className="group rounded-md border border-input px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+      <div className="group flex rounded-md border border-input px-3 py-1 h-9 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
         <div className="flex flex-wrap gap-1">
           {selected.map((value) => {
             return (
@@ -80,15 +87,18 @@ export function FancyMultiSelect({ values }: { values: string[] }) {
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
-            placeholder="Select frameworks..."
-            className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
+            placeholder={placeholder}
+            className={cn(
+              "flex-1 bg-transparent outline-none placeholder:text-muted-foreground",
+              selected.length > 0 ? "pl-2" : ""
+            )}
           />
         </div>
       </div>
       <div className="relative mt-2">
         <CommandList>
           {open && selectables.length > 0 ? (
-            <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in max-h-64 overflow-hidden overflow-y-scroll">
               <CommandGroup className="h-full overflow-auto">
                 {selectables.map((value) => {
                   return (
