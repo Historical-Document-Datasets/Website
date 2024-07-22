@@ -1,4 +1,5 @@
 import ItemsJS from "itemsjs";
+import { z } from "zod";
 
 export interface Dataset {
   id: string;
@@ -68,3 +69,10 @@ export type SearchAction =
   | { type: "SET_CONJUNCTION"; payload: Record<string, boolean> }
   | { type: "SET_PAGE"; payload: number }
   | { type: "CLEAR_FILTERS" };
+
+export const FormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  languages: z.array(z.string()).nonempty("At least one language is required."),
+});
+
+export type FormSchemaType = z.infer<typeof FormSchema>;

@@ -1,101 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Control, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { stringify } from "yaml";
 import { z } from "zod";
 
 import CopyToClipboard from "@/components/CopyToClipboard";
+import { SelectInput, TextInput } from "@/components/FormInputs";
 import { Error, Loader } from "@/components/Loaders";
-import { FancyMultiSelect } from "@/components/MutliSelect";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { fetcher } from "@/utils/helpers";
+import { FormSchema } from "@/utils/types";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
-
-const FormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
-  languages: z.array(z.string()).nonempty("At least one language is required."),
-});
-
-type FormSchemaType = z.infer<typeof FormSchema>;
-
-const TextInput = ({
-  control,
-  name,
-  label,
-  placeholder,
-  description,
-}: {
-  control: Control<FormSchemaType>;
-  name: keyof FormSchemaType;
-  label: string;
-  placeholder: string;
-  description?: string;
-}) => {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input placeholder={placeholder} {...field} />
-          </FormControl>
-          <FormDescription>{description}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
-
-const SelectInput = ({
-  control,
-  name,
-  label,
-  placeholder,
-  description,
-  options,
-}: {
-  control: Control<FormSchemaType>;
-  name: keyof FormSchemaType;
-  label: string;
-  placeholder: string;
-  description?: string;
-  options: string[];
-}) => {
-  return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <FancyMultiSelect
-              values={options}
-              placeholder={placeholder}
-              {...field}
-            />
-          </FormControl>
-          <FormDescription>{description}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
 
 function InputForm() {
   const [output, setOutput] = useState<string | null>(null);
