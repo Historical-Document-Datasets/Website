@@ -8,19 +8,30 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { FormSchemaType } from "@/utils/types";
 import { Command as CommandPrimitive } from "cmdk";
+import { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 export function FancyMultiSelect({
+  field,
   values,
   placeholder,
+  form,
 }: {
+  field: keyof FormSchemaType;
   values: string[];
   placeholder: string;
+  form: UseFormReturn<FormSchemaType>;
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<string[]>([]);
   const [inputValue, setInputValue] = React.useState("");
+
+  useEffect(() => {
+    form.setValue(field, selected);
+  }, [selected]);
 
   const handleUnselect = React.useCallback((value: string) => {
     setSelected((prev) => prev.filter((s) => s !== value));
@@ -55,7 +66,7 @@ export function FancyMultiSelect({
       onKeyDown={handleKeyDown}
       className="overflow-visible bg-transparent"
     >
-      <div className="group flex rounded-md border border-input px-3 py-1 min-h-9 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring">
+      <div className="group flex rounded-md border border-input px-3 py-1 min-h-9 shadow-sm text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring">
         <div className="flex flex-wrap gap-1 flex-1">
           {selected.map((value) => {
             return (
@@ -97,7 +108,7 @@ export function FancyMultiSelect({
           />
         </div>
       </div>
-      <div className="relative mt-2">
+      <div className="relative">
         <CommandList>
           {open && selectables.length > 0 ? (
             <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in max-h-64 overflow-hidden overflow-y-scroll">

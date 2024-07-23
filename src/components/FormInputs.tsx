@@ -1,5 +1,5 @@
 import { FormSchemaType } from "@/utils/types";
-import { Control } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { FancyMultiSelect } from "./MutliSelect";
 import {
   FormControl,
@@ -12,13 +12,13 @@ import {
 import { Input } from "./ui/input";
 
 export const TextInput = ({
-  control,
+  form,
   name,
   label,
   placeholder,
   description,
 }: {
-  control: Control<FormSchemaType>;
+  form: UseFormReturn<FormSchemaType>;
   name: keyof FormSchemaType;
   label: string;
   placeholder: string;
@@ -26,7 +26,7 @@ export const TextInput = ({
 }) => {
   return (
     <FormField
-      control={control}
+      control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
@@ -43,14 +43,14 @@ export const TextInput = ({
 };
 
 export const SelectInput = ({
-  control,
+  form,
   name,
   label,
   placeholder,
   description,
   options,
 }: {
-  control: Control<FormSchemaType>;
+  form: UseFormReturn<FormSchemaType>;
   name: keyof FormSchemaType;
   label: string;
   placeholder: string;
@@ -59,14 +59,16 @@ export const SelectInput = ({
 }) => {
   return (
     <FormField
-      control={control}
+      control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <FancyMultiSelect
+              field={name}
               values={options}
+              form={form}
               placeholder={placeholder}
               {...field}
             />

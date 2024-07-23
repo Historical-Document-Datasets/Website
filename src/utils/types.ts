@@ -72,7 +72,15 @@ export type SearchAction =
 
 export const FormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
-  languages: z.array(z.string()).nonempty("At least one language is required."),
+  languages: z.array(z.string()).optional(),
+  tasks: z.array(z.string()).nonempty("Please select at least one task."),
+  formats: z.array(z.string()).optional(),
+  modes: z.array(z.string()).optional(),
+  statistics: z.string().optional(),
+  class: z.string().optional(),
+  document_type: z.string().optional(),
+  resolution: z.string().optional(),
+  reference: z.string().optional(),
 });
 
 export type FormSchemaType = z.infer<typeof FormSchema>;
