@@ -46,13 +46,13 @@ const NavLinks = () => {
       >
         Browse
       </Link>
-      <a
-        href=""
+      <Link
+        to={"contribute"}
         className="hover:text-foreground/80 text-foreground/60 flex gap-1 items-center"
       >
         <SquarePen size={16} className="" />
         Add data
-      </a>
+      </Link>
     </nav>
   );
 };
