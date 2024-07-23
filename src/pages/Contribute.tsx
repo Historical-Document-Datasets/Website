@@ -7,8 +7,17 @@ import { z } from "zod";
 import CopyToClipboard from "@/components/CopyToClipboard";
 import { SelectInput, TextInput } from "@/components/FormInputs";
 import { Error, Loader } from "@/components/Loaders";
+import { MinimalTiptapEditor } from "@/components/minimal-tiptap";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { fetcher } from "@/utils/helpers";
 import { FormSchema } from "@/utils/types";
 import { useState } from "react";
@@ -122,6 +131,27 @@ function InputForm() {
               placeholder="https://example.com"
             />
           </div>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="sr-only">Description</FormLabel>
+                <FormControl>
+                  <MinimalTiptapEditor
+                    {...field}
+                    onValueChange={field.onChange}
+                    outputValue="html"
+                    className={cn("w-full", {
+                      "border-red-500 focus-within:border-red-500":
+                        form.formState.errors.description,
+                    })}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Button type="submit">Submit</Button>
         </form>
       </Form>
@@ -132,7 +162,6 @@ function InputForm() {
             <CopyToClipboard text={output} />
             <SyntaxHighlighter
               language="yaml"
-              showLineNumber={true}
               className="border rounded-md z-10"
             >
               {output}

@@ -81,6 +81,9 @@ export const FormSchema = z.object({
   document_type: z.string().optional(),
   resolution: z.string().optional(),
   reference: z.string().optional(),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters."),
 });
 
 export type FormSchemaType = z.infer<typeof FormSchema>;
