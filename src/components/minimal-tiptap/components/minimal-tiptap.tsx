@@ -9,6 +9,7 @@ import { Plugin, TextSelection } from "@tiptap/pm/state";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { forwardRef } from "react";
+import TurndownService from "turndown";
 import { getOutput } from "../utils";
 import { LinkBubbleMenu } from "./bubble-menu/link-bubble-menu";
 import SectionOne from "./section-1";
@@ -94,7 +95,16 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
         },
       },
       onUpdate: (props) => {
-        onValueChange(getOutput(props.editor, outputValue));
+        const turndownService = new TurndownService({ headingStyle: "atx" });
+        turndownService.addRule("strikethrough", {
+          filter: ["del", "s"],
+          replacement: function (content) {
+            return "~" + content + "~";
+          },
+        });
+        onValueChange(
+          turndownService.turndown(getOutput(props.editor, outputValue))
+        );
       },
       content: value,
       editable: !disabled,
