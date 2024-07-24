@@ -65,12 +65,6 @@ dependencies:
   '@tiptap/extension-link':
     specifier: ^2.5.5
     version: 2.5.5(@tiptap/core@2.5.5)(@tiptap/pm@2.5.5)
-  '@tiptap/extension-list-item':
-    specifier: ^2.5.5
-    version: 2.5.5(@tiptap/core@2.5.5)
-  '@tiptap/extension-ordered-list':
-    specifier: ^2.5.5
-    version: 2.5.5(@tiptap/core@2.5.5)
   '@tiptap/pm':
     specifier: ^2.5.5
     version: 2.5.5

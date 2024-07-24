@@ -3,8 +3,6 @@ import { cn } from "@/lib/utils";
 import type { Editor as TiptapEditor } from "@tiptap/core";
 import { getMarkRange } from "@tiptap/core";
 import { Link } from "@tiptap/extension-link";
-import ListItem from "@tiptap/extension-list-item";
-import OrderedList from "@tiptap/extension-ordered-list";
 import { Plugin, TextSelection } from "@tiptap/pm/state";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -42,8 +40,6 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
     const editor = useEditor({
       extensions: [
         StarterKit,
-        OrderedList,
-        ListItem,
         Link.configure({
           openOnClick: false,
         }).extend({
