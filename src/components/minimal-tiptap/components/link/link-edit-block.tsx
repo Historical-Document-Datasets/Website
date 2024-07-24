@@ -2,14 +2,13 @@ import type { Editor } from '@tiptap/core'
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Switch } from '@/components/ui/switch'
 import { Input } from '@/components/ui/input'
 import { LinkProps } from '../../types'
 import { cn } from '@/lib/utils'
 
 interface LinkEditBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   editor: Editor
-  onSetLink: ({ url, text, openInNewTab }: LinkProps) => void
+  onSetLink: ({ url, text }: LinkProps) => void
   close?: () => void
 }
 
@@ -19,18 +18,16 @@ const LinkEditBlock = ({ editor, onSetLink, close, className, ...props }: LinkEd
   const [field, setField] = React.useState<LinkProps>({
     url: '',
     text: '',
-    openInNewTab: false
   })
 
   const data = React.useMemo(() => {
-    const { href, target } = editor.getAttributes('link')
+    const { href } = editor.getAttributes('link')
     const { from, to } = editor.state.selection
     const text = editor.state.doc.textBetween(from, to, ' ')
 
     return {
       url: href,
       text,
-      openInNewTab: target === '_blank' ? true : false
     }
   }, [editor])
 
@@ -78,14 +75,6 @@ const LinkEditBlock = ({ editor, onSetLink, close, className, ...props }: LinkEd
             placeholder="Text to display"
             value={field.text ?? ''}
             onChange={e => setField({ ...field, text: e.target.value })}
-          />
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Label>Open in new tab</Label>
-          <Switch
-            checked={field.openInNewTab}
-            onCheckedChange={checked => setField({ ...field, openInNewTab: checked })}
           />
         </div>
 
