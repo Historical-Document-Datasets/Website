@@ -65,6 +65,9 @@ dependencies:
   '@tiptap/extension-link':
     specifier: ^2.5.6
     version: 2.5.6(@tiptap/core@2.5.6)(@tiptap/pm@2.5.6)
+  '@tiptap/extension-underline':
+    specifier: ^2.5.6
+    version: 2.5.6(@tiptap/core@2.5.6)
   '@tiptap/pm':
     specifier: ^2.5.6
     version: 2.5.6
@@ -2234,6 +2237,14 @@ packages:
 
   /@tiptap/extension-text@2.5.6(@tiptap/core@2.5.6):
     resolution: {integrity: sha512-dJFARnhuxaLrUP/3PhSE7Wfq/OBRKKW73ZMVrIFhGbVxOdmTZxA12d95U0e+5q6mbPSQFNx8ZYhqnStztRAjBw==}
+    peerDependencies:
+      '@tiptap/core': ^2.5.6
+    dependencies:
+      '@tiptap/core': 2.5.6(@tiptap/pm@2.5.6)
+    dev: false
+
+  /@tiptap/extension-underline@2.5.6(@tiptap/core@2.5.6):
+    resolution: {integrity: sha512-1Bhi/iC3WTKXgUx4ha9cp7Vhds1hHrKnKGuiEWP02yUkwq+iGKPHWGBW/qoXyXSnvt6fXPYdeNIsaBJVtk4c/A==}
     peerDependencies:
       '@tiptap/core': ^2.5.6
     dependencies:

@@ -10,6 +10,7 @@ import {
   DotsHorizontalIcon,
   FontBoldIcon,
   FontItalicIcon,
+  UnderlineIcon,
 } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/core";
 import { Keybinds } from "../keybinds";
@@ -39,6 +40,17 @@ export default function SectionTwo({ editor }: { editor: Editor }) {
         aria-label="Italic"
       >
         <FontItalicIcon className="size-5" />
+      </ToolbarButton>
+
+      {/* UNDERLINE */}
+      <ToolbarButton
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        disabled={!editor.can().chain().focus().toggleUnderline().run()}
+        isActive={editor.isActive("underline")}
+        tooltip="Underline"
+        aria-label="Underline"
+      >
+        <UnderlineIcon className="size-5" />
       </ToolbarButton>
 
       {/* STRIKE, CODE, CLEAR FORMATTING */}
