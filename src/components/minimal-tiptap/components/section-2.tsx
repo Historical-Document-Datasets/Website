@@ -57,7 +57,7 @@ export default function SectionTwo({ editor }: { editor: Editor }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <ToolbarButton
-            isActive={editor.isActive("strike") || editor.isActive("code")}
+            isActive={editor.isActive("strike")}
             tooltip="More formatting"
             aria-label="More formatting"
           >

@@ -42,7 +42,10 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
   ) => {
     const editor = useEditor({
       extensions: [
-        StarterKit,
+        StarterKit.configure({
+          codeBlock: false,
+          code: false,
+        }),
         Underline,
         Link.configure({
           openOnClick: false,
