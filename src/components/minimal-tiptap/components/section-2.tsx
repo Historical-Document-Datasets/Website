@@ -12,7 +12,6 @@ import {
 } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/core";
 import { DropdownMenuItemClass, activeItemClass } from "../utils";
-import { ShortcutKey } from "./shortcut-key";
 import { ToolbarButton } from "./toolbar-button";
 
 export default function SectionTwo({ editor }: { editor: Editor }) {
@@ -61,7 +60,6 @@ export default function SectionTwo({ editor }: { editor: Editor }) {
             aria-label="Strikethrough"
           >
             <span className="grow">Strikethrough</span>
-            <ShortcutKey keys={["mod", "shift", "S"]} />
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => editor.chain().focus().unsetAllMarks().run()}

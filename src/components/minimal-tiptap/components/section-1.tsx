@@ -4,12 +4,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { KeyCombo } from "@/components/ui/keyboard";
 import { cn } from "@/lib/utils";
 import { CaretDownIcon, LetterCaseCapitalizeIcon } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/core";
 import type { Level } from "@tiptap/extension-heading";
+import { Keybinds } from "../keybinds";
 import { DropdownMenuItemClass, activeItemClass } from "../utils";
-import { ShortcutKey } from "./shortcut-key";
 import { ToolbarButton } from "./toolbar-button";
 
 export default function SectionOne({ editor }: { editor: Editor }) {
@@ -39,7 +40,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Normal text"
         >
           <span className="grow">Normal Text</span>
-          <ShortcutKey keys={["mod", "alt", "0"]} />
+          <KeyCombo keyNames={Keybinds["paragraph"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(1)}
@@ -49,7 +50,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 1"
         >
           <h1 className="m-0 grow text-3xl font-extrabold">Heading 1</h1>
-          <ShortcutKey keys={["mod", "alt", "1"]} />
+          <KeyCombo keyNames={Keybinds["heading1"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(2)}
@@ -59,7 +60,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 2"
         >
           <h2 className="m-0 grow text-xl font-bold">Heading 2</h2>
-          <ShortcutKey keys={["mod", "alt", "2"]} />
+          <KeyCombo keyNames={Keybinds["heading2"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(3)}
@@ -69,7 +70,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 3"
         >
           <h3 className="m-0 grow text-lg font-semibold">Heading 3</h3>
-          <ShortcutKey keys={["mod", "alt", "3"]} />
+          <KeyCombo keyNames={Keybinds["heading3"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(4)}
@@ -79,7 +80,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 4"
         >
           <h4 className="m-0 grow text-base font-semibold">Heading 4</h4>
-          <ShortcutKey keys={["mod", "alt", "4"]} />
+          <KeyCombo keyNames={Keybinds["heading4"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(5)}
@@ -89,7 +90,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 5"
         >
           <h5 className="m-0 grow text-sm font-normal">Heading 5</h5>
-          <ShortcutKey keys={["mod", "alt", "5"]} />
+          <KeyCombo keyNames={Keybinds["heading5"]} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => toggleHeading(6)}
@@ -99,7 +100,7 @@ export default function SectionOne({ editor }: { editor: Editor }) {
           aria-label="Heading 6"
         >
           <h6 className="m-0 grow text-sm font-normal">Heading 6</h6>
-          <ShortcutKey keys={["mod", "alt", "6"]} />
+          <KeyCombo keyNames={Keybinds["heading6"]} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

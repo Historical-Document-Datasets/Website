@@ -1,3 +1,4 @@
+import { ShortcutsProvider } from "@/components/ui/keyboard";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { Editor as TiptapEditor } from "@tiptap/core";
@@ -142,14 +143,18 @@ MinimalTiptapEditor.displayName = "MinimalTiptapEditor";
 const Toolbar = ({ editor }: { editor: TiptapEditor }) => {
   return (
     <div className="border-b border-border p-2">
-      <div className="flex w-full flex-wrap items-center">
-        <SectionOne editor={editor} />
-        <Separator orientation="vertical" className="mx-2 h-7" />
-        <SectionTwo editor={editor} />
-        <Separator orientation="vertical" className="mx-2 h-7" />
-        <SectionThree editor={editor} />
-        <Separator orientation="vertical" className="mx-2 h-7" />
-        <SectionFour editor={editor} />
+      <div className="flex w-full flex-wrap items-center justify-between">
+        <div className="flex flex-wrap items-center">
+          <ShortcutsProvider os="mac">
+            <SectionOne editor={editor} />
+            <Separator orientation="vertical" className="mx-2 h-7" />
+            <SectionTwo editor={editor} />
+            <Separator orientation="vertical" className="mx-2 h-7" />
+            <SectionThree editor={editor} />
+            <Separator orientation="vertical" className="mx-2 h-7" />
+            <SectionFour editor={editor} />
+          </ShortcutsProvider>
+        </div>
       </div>
     </div>
   );
