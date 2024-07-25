@@ -4,6 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { KeyCombo } from "@/components/ui/keyboard";
 import { cn } from "@/lib/utils";
 import {
   DotsHorizontalIcon,
@@ -11,6 +12,7 @@ import {
   FontItalicIcon,
 } from "@radix-ui/react-icons";
 import type { Editor } from "@tiptap/core";
+import { Keybinds } from "../keybinds";
 import { DropdownMenuItemClass, activeItemClass } from "../utils";
 import { ToolbarButton } from "./toolbar-button";
 
@@ -60,6 +62,7 @@ export default function SectionTwo({ editor }: { editor: Editor }) {
             aria-label="Strikethrough"
           >
             <span className="grow">Strikethrough</span>
+            <KeyCombo keyNames={Keybinds["strikethrough"].keys} />
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => editor.chain().focus().unsetAllMarks().run()}

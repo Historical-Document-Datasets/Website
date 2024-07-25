@@ -37,7 +37,7 @@ export default function SectionThree({ editor }: { editor: Editor }) {
           aria-label="Numbered list"
         >
           <span className="grow">Numbered list</span>
-          <KeyCombo keyNames={Keybinds["orderedList"]} />
+          <KeyCombo keyNames={Keybinds["orderedList"].keys} />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -47,7 +47,7 @@ export default function SectionThree({ editor }: { editor: Editor }) {
           aria-label="Bullet list"
         >
           <span className="grow">Bullet list</span>
-          <KeyCombo keyNames={Keybinds["bulletList"]} />
+          <KeyCombo keyNames={Keybinds["bulletList"].keys} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

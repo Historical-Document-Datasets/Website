@@ -1,3 +1,4 @@
+import KeyboardShortutsButton from "@/components/KeyboardShortcuts";
 import { ShortcutsProvider } from "@/components/ui/keyboard";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -155,6 +156,7 @@ const Toolbar = ({ editor }: { editor: TiptapEditor }) => {
             <SectionFour editor={editor} />
           </ShortcutsProvider>
         </div>
+        <KeyboardShortutsButton />
       </div>
     </div>
   );
