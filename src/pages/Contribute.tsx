@@ -53,14 +53,13 @@ function InputForm() {
   if (error) return <Error />;
 
   function onSubmit(submit_data: z.infer<typeof FormSchema>) {
-    console.log(submit_data);
     setOutput(stringify(submit_data));
   }
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-x-4">
             <TextInput
               form={form}
@@ -152,7 +151,9 @@ function InputForm() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="mt-4 w-full">
+            Get formatted data
+          </Button>
         </form>
       </Form>
       {output && (
