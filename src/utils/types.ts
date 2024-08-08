@@ -70,7 +70,7 @@ export type SearchAction =
   | { type: "SET_PAGE"; payload: number }
   | { type: "CLEAR_FILTERS" };
 
-export const FormSchema = z.object({
+export const Step1FormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   languages: z.array(z.string()).optional(),
   tasks: z.array(z.string()).nonempty("Please select at least one task."),
@@ -86,4 +86,4 @@ export const FormSchema = z.object({
     .min(10, "Description must be at least 10 characters."),
 });
 
-export type FormSchemaType = z.infer<typeof FormSchema>;
+export type FormSchemaType = z.infer<typeof Step1FormSchema>;

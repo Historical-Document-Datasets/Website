@@ -38,6 +38,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "itemsjs": "^2.1.25",
+    "little-state-machine": "^4.8.0",
     "lodash.defaultsdeep": "^4.6.1",
     "lucide-react": "^0.358.0",
     "minisearch": "^6.3.0",

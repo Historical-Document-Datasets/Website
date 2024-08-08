@@ -13,7 +13,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="contribute/" element={<Contribute />} />
+          <Route path="contribute//*" element={<Contribute />} />
           <Route path="browse/" element={<Browse />} />
           <Route path="browse/:name" element={<Detail />} />
         </Route>
