@@ -68,6 +68,7 @@ export const SelectInput = ({
             <FancyMultiSelect
               field={name}
               values={options}
+              defaults={(form.getValues(name) as string[]) || [""]}
               form={form}
               placeholder={placeholder}
               {...field}

@@ -42,7 +42,7 @@ export default function Step1() {
     defaultValues: {
       name: "",
       languages: [],
-      tasks: [],
+      tasks: [""],
       formats: [],
       modes: [],
       statistics: "",
@@ -155,6 +155,7 @@ export default function Step1() {
                   <MinimalTiptapEditor
                     {...field}
                     onValueChange={field.onChange}
+                    value={form.getValues("description")}
                     outputValue="html"
                     className={cn("w-full", {
                       "border-red-500 focus-within:border-red-500":

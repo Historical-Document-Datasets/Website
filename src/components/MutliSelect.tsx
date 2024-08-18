@@ -16,17 +16,19 @@ import { UseFormReturn } from "react-hook-form";
 export function FancyMultiSelect({
   field,
   values,
+  defaults,
   placeholder,
   form,
 }: {
   field: keyof FormSchemaType;
   values: string[];
+  defaults: string[];
   placeholder: string;
   form: UseFormReturn<FormSchemaType>;
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState<string[]>(defaults);
   const [inputValue, setInputValue] = React.useState("");
 
   useEffect(() => {

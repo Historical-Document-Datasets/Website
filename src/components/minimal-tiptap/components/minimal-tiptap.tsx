@@ -9,7 +9,7 @@ import Underline from "@tiptap/extension-underline";
 import { Plugin, TextSelection } from "@tiptap/pm/state";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import TurndownService from "turndown";
 import { getOutput } from "../utils";
 import { LinkBubbleMenu } from "./bubble-menu/link-bubble-menu";
@@ -105,9 +105,7 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
             return "~" + content + "~";
           },
         });
-        onValueChange(
-          turndownService.turndown(getOutput(props.editor, outputValue))
-        );
+        onValueChange(getOutput(props.editor, outputValue));
       },
       content: value,
       editable: !disabled,
@@ -117,6 +115,12 @@ const MinimalTiptapEditor = forwardRef<HTMLDivElement, MinimalTiptapProps>(
         }
       },
     });
+
+    useEffect(() => {
+      if (value) {
+        editor?.chain().setContent(value).run();
+      }
+    }, [value, editor]);
 
     return (
       <div
