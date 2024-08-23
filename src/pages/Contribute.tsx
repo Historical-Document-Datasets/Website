@@ -157,7 +157,7 @@ function InputForm() {
         </form>
       </Form>
       {output && (
-        <div>
+        <div className="mb-4">
           <h2 className="text-xl font-medium mt-4 mb-2">Formatted output</h2>
           <div className="relative">
             <CopyToClipboard text={output} />
