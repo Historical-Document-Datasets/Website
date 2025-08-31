@@ -104,7 +104,6 @@ const Search = ({
       page: page,
       per_page: perPage,
       sort: sort as "name_asc" | "name_desc",
-      // @ts-expect-error field "ids" is not implemented in @types/itemsjs
       ids: search_results.map((v) => v.id),
       filters: filters,
     });
